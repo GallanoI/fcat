@@ -1,0 +1,180 @@
+.residencia-page {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.slide-canvas {
+  width: 100vw;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.section-16-9 {
+  width: 100vw;
+  height: 56.25vw;
+  position: relative;
+}
+
+.res-bg-1 {
+  background-image: url('../assets/fotos/residencia/res1.jpg');
+}
+
+.pres-text-1,
+.pres-text-2 {
+  color: white;
+  font-weight: 500;
+  font-size: 1.15rem;
+  -webkit-text-stroke: 1px black;
+}
+
+.pres-text-2 {
+  font-size: 2.2rem;
+}
+
+.residentes-title {
+  position: absolute;
+  top: 1%;
+  left: 10%;
+  color: white;
+  font-size: 2rem;
+  -webkit-text-stroke: 1px black;
+  z-index: 2;
+}
+
+.ascending-container {
+  position: absolute;
+  width: 100%;
+  top: 120%;
+  display: flex;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.ascending-panel {
+  display: flex;
+  width: 100%;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ascending-panel .left-col {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.panel-logo {
+  width: 100%;
+  max-width: 550px;
+}
+
+.ascending-panel .right-col {
+  flex: 1;
+  padding: 5px 0.5in;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.ascending-panel .right-col p {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  margin: 5px 0;
+  text-align: justify;
+}
+
+.panel-img {
+  display: block;
+  margin: 10px auto;
+  width: 80%;
+  max-width: 400px;
+}
+
+.res-section-2 {
+  background-color: #7f5f5c;
+  display: flex;
+  padding: 20px;
+}
+
+.res-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
+}
+
+.column-right {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
+.quote-text {
+  color: #f8e71c;
+  font-size: 2rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.materiales-section {
+  background-image: url('../assets/fotos/fondos/investigacion.JPEG');
+  background-size: cover;
+  background-position: center;
+}
+
+.materiales-title {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 4rem;
+  letter-spacing: 0.08em;
+  -webkit-text-stroke: 1px #000;
+  margin: 0;
+}
+
+.materiales-circle {
+  width: 240px;
+  height: 240px;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.materiales-carousel-wrap {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  width: 100%;
+  transform: translateX(-50%) scale(0.88);
+  transform-origin: bottom center;
+}
+
+.residentes-carousel .carousel-main {
+  background-color: rgba(242, 255, 164, 0.6);
+  border: 1px solid black;
+}
+
+.residentes-carousel .img-grid-container {
+  border: 1px solid black;
+  background-color: #000;
+}
+
+
+.residentes-carousel .carousel-text {
+  color: #fdfb81 !important;
+  font-weight: 1000;
+  font-size: 1.8rem;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 1px 1px 0 #000;
+}

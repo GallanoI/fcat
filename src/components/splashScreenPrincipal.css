@@ -1,0 +1,50 @@
+.splash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.bg-home {
+  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
+}
+
+.splash-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+.logo-splash {
+  width: 375px;
+  margin-bottom: 20px;
+}
+
+.splash-text-cat {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.splash-text-mov {
+  font-size: 1.5rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.splash-panel {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #211708;
+  color: white;
+  padding: 25px;
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 1.6rem;
+  z-index: 10;
+}

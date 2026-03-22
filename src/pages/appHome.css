@@ -1,0 +1,48 @@
+.app-home-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.bg-home {
+  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
+}
+
+.app-home-page .c-creacion,
+.app-home-page .c-educacion,
+.app-home-page .c-investigacion,
+.app-home-page .dif-lines {
+  color: white !important;
+}
+
+.app-home-page .c-creacion,
+.app-home-page .c-educacion {
+  font-size: clamp(2rem, 4.2vw, 4rem) !important;
+}
+
+.app-home-page .c-investigacion {
+  font-size: clamp(3rem, 3.8vw, 4rem) !important;
+}
+
+.dif-title {
+  position: relative;
+  display: inline-block;
+}
+
+.dif-lines {
+  font-size: clamp(2.5rem, 3.8vw, 4rem);
+  line-height: 1;
+  position: absolute;
+  right: -0.8em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dif-amp {
+  position: absolute;
+  right: -1.1em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: yellow;
+  font-size: clamp(3rem, 6.5vw, 7rem);
+  pointer-events: none;
+}

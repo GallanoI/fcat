@@ -1,0 +1,114 @@
+.tunquen-tv-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+}
+
+.ttv-panel {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: rgba(5, 141, 199, 1);
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(10px, 2vw, 28px);
+  box-sizing: border-box;
+  color: #fff;
+  -webkit-text-stroke: 0.45px #000;
+}
+
+.ttv-panel-top {
+  top: 0;
+  height: 16.6667vh;
+}
+
+.ttv-panel-top h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  font-weight: 400;
+}
+
+.ttv-content-area {
+  position: absolute;
+  top: 16.6667vh;
+  bottom: 17.7778vh;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: clamp(12px, 0vw, 0px);
+  box-sizing: border-box;
+}
+
+.ttv-links-table {
+  width: min(26vw, 320px);
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ttv-table-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 25px;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: #0b3f9d;
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  -webkit-text-stroke: 0.5px black;
+  transition: filter 0.2s ease;
+}
+
+.ttv-table-row:hover {
+  filter: brightness(1.5);
+}
+
+.ttv-table-row.alt-a {
+  background: rgba(0, 176, 240, 0.45);
+}
+
+.ttv-table-row.alt-b {
+  background: rgba(0, 176, 240, 0.85);
+}
+
+.ttv-panel-bottom {
+  bottom: 0;
+  height: 17.7778vh;
+}
+
+.ttv-panel-bottom p {
+  margin: 0;
+  font-size: clamp(1.82rem, 1.4vw, 1.3rem);
+  line-height: 1.25;
+}
+
+.ttv-social-link {
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-right: 0.2em;
+}
+
+.ttv-social-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 980px) {
+  .ttv-content-area {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ttv-links-table {
+    width: min(92vw, 620px);
+  }
+}

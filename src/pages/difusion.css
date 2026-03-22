@@ -1,0 +1,73 @@
+.difusion-page {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/fotos/fondos/difusion.jpeg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.c-difusion.duexprecion-item {
+  background-color: rgba(8, 84, 184, 1) !important;
+}
+
+.duexprecion{
+  position: relative;
+  display: inline-block;
+}
+
+.duexpre {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: right;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translate(-90%, -50%);
+}
+
+.ciones {
+  font-size: 4rem;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: left;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(20%, -50%);
+  pointer-events: none;
+  color: #93c47d;
+}
+
+.tunquenTV {
+  position: relative;
+  display: inline-block;
+}
+.Tunquen {
+  font-size: 3.2rem;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: center;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.TV {
+  font-size: 5.8rem;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.festivales,
+.artesIntegradas{
+  font-size: 2rem;
+  color: #93c47d;
+}

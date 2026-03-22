@@ -1,0 +1,13 @@
+.center-logo-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.center-logo-image {
+  width: min(50vw, 380px);
+  height: auto;
+}

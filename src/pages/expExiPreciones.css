@@ -1,0 +1,214 @@
+/*
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  SISTEMA DE POSICIONAMIENTO DE TEXTOS                      ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+ESTRUCTURA DE COMPONENTES:
+========================
+1. DuTextColFond: Layout dual (4fr izquierda | 12fr derecha)
+   - .du-col-left: Columna izquierda (25% del ancho)
+   - .du-col-right: Columna derecha (75% del ancho)
+
+2. .exp-left-content: Contenedor del texto IZQUIERDO
+   - Dentro de .du-col-left
+   - Display: flex, centrado verticalmente
+   - Contiene: .exp-left-changing-text
+
+3. .exp-left-changing-text: TEXTO IZQUIERDO (leftText)
+   - Alineación: LEFT (text-align: left)
+   - Color: #ffffff (blanco) con -webkit-text-stroke: 1px #000 (borde negro)
+   - Tamaño: clamp(1.8rem, 3.8vw, 4rem) - responsive
+   - Line-height: 1.2 - espaciado entre líneas
+   - Padding: 2rem 1.5rem - espacio interno
+   - Position: RELATIVE - dentro de su contenedor
+   - Ancho: 100% - usa todo el ancho de la columna izquierda
+
+4. .exp-right-content: Contenedor del LADO DERECHO
+   - Dentro de .du-col-right
+   - Display: flex, centrado verticalmente
+   - Contiene: .exp-feature-wrap (con imagen y texto superior)
+
+5. .exp-right-overlay-text: TEXTO DERECHO (rightText)
+   - Se posiciona SOBRE la imagen (top: -15%)
+   - Alineación: CENTER (text-align: center)
+   - Color: #ffcb0a (amarillo) con -webkit-text-stroke: 1px #000
+   - Tamaño: clamp(2rem, 3.3vw, 3.3rem) - más pequeño que leftText
+   - Line-height: 0.9 - muy ajustado
+   - Position: ABSOLUTE - posicionado sobre la imagen
+   - Transform: translate(-50%, -50%) - centrado horizontalmente
+
+CÓMO PERSONALIZAR:
+==================
+• Para cambiar tamaño de leftText: Modifica font-size en .exp-left-changing-text
+• Para cambiar tamaño de rightText: Modifica font-size en .exp-right-overlay-text
+• Para mover rightText arriba/abajo: Ajusta el valor de 'top' en .exp-right-overlay-text
+• Para cambiar espacio del leftText: Modifica 'padding' en .exp-left-changing-text
+• Para cambios de color: Modifica 'color' en ambas clases
+• Para cambiar grosor de borde: Modifica -webkit-text-stroke (ej: 2px, 0px)
+
+EJEMPLO DE TEXTOS (desde expExiPreciones.js):
+==============================================
+const photoData = {
+  0: { 
+    leftText: 'CONCIERTO PARA FLAUTA Y PIANO',  // Alineado a la izquierda
+    rightText: 'ROBERTO ORELLANA',             // Centrado sobre imagen
+    audioFile: 'wind.mp3' 
+  },
+  1: { 
+    leftText: 'MÚSICA FLAMENCA',
+    rightText: 'GUSTAVO LOPEZ',
+    audioFile: 'audio1.mp3' 
+  },
+  // Agrega más fotos aquí...
+};
+*/
+
+.exp-page {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  font-family: 'Oswald', sans-serif;
+}
+
+.exp-layout {
+  width: 100%;
+  height: 100%;
+}
+
+.exp-left-title {
+  font-size: clamp(2.4rem, 5.4vw, 2.5rem);
+}
+
+.exp-right-title {
+  font-size: clamp(2.8rem, 6.4vw, 3.6rem);
+}
+
+.exp-left-content,
+.exp-right-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.exp-left-changing-text {
+  width: 100%;
+  margin: 0;
+  position: relative;
+  color: #fff;
+  font-size: clamp(1.8rem, 3.8vw, 4rem);
+  line-height: 1.2;
+  text-align: left;
+  -webkit-text-stroke: 1px #000;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.exp-feature-wrap {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  width: min(40vw, 900px);
+  transform: translate(-50%, -50%);
+}
+
+.exp-feature-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.exp-feature-img:hover {
+  transform: scale(1.03);
+}
+
+.exp-right-overlay-text {
+  position: absolute;
+  top: -15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  color: #ffcb0a;
+  font-size: clamp(2rem, 3.3vw, 3.3rem);
+  line-height: 0.9;
+  text-align: center;
+  -webkit-text-stroke: 1px #000;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.exp-audio-btn {
+  position: absolute;
+  right: -15px;
+  bottom: -15px;
+}
+
+.exp-carousel-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--exp-carousel-bottom, 0px);
+  height: var(--exp-carousel-height, 30vh);
+  padding: 8px 0 14px;
+}
+
+.carousel-main{
+  border-radius: 0%;
+}
+
+.exp-duexpre-carousel .carousel-main {
+  width: 98%;
+  height: 100%;
+}
+
+.exp-duexpre-carousel .carousel-track,
+.exp-duexpre-carousel .carousel-item,
+.exp-duexpre-carousel .img-grid-container {
+  height: 100%;
+}
+
+.exp-duexpre-carousel .img-grid-container {
+  aspect-ratio: auto;
+}
+
+.exp-duexpre-carousel .dots-container {
+  display: none;
+}
+
+.exp-duexpre-carousel .img-grid-container {
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 980px) {
+  .exp-left-changing-text {
+    position: static;
+    transform: none;
+    margin: 24px auto 0;
+    text-align: left;
+  }
+
+  .exp-feature-wrap {
+    width: 94%;
+    top: 54%;
+  }
+
+  .exp-audio-btn {
+    right: 6px;
+    bottom: 6px;
+  }
+
+  .exp-carousel-wrap {
+    padding-bottom: 8px;
+  }
+}

@@ -1,0 +1,87 @@
+.circle-item-link {
+  text-decoration: none;
+}
+
+.full-bg {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.circle-common.pilar-main {
+  font-size: 2.8rem;
+  font-weight: 300;
+  font-family: 'Oswald', sans-serif;
+}
+
+.circle-common {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.pilar-main {
+  width: clamp(170px, 20vw, 320px);
+  height: clamp(170px, 20vw, 320px);
+  position: absolute;
+}
+
+.subcategory-circle {
+  width: clamp(130px, 14vw, 220px);
+  height: clamp(130px, 14vw, 220px);
+  font-size: clamp(0.95rem, 1.25vw, 1.4rem);
+  font-weight: 300;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+
+.subcategory-circle:hover {
+  transform: scale(1.2) !important;
+  opacity: 1 !important;
+  z-index: 100;
+}
+
+.c-creacion {
+  background-color: rgba(255, 255, 0, 0.58) !important;
+  border: 4px solid #a46e1b !important;
+  color: white;
+}
+
+.c-difusion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 176, 240, 0.5) !important;
+  border: 4px solid #212121 !important;
+  color: #f1c232;
+}
+
+.c-educacion {
+  background-color: rgba(240, 0, 154, 0.5) !important;
+  border: 4px solid magenta !important;
+  color: #93c47d;
+}
+
+.c-investigacion {
+  background-color: rgba(173, 173, 173, 0.4) !important;
+  border: 4px solid #212121 !important;
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .circle-common.pilar-main {
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+  }
+
+  .subcategory-circle {
+    font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+    border-width: 2px !important;
+  }
+}
