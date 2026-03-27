@@ -48,3 +48,58 @@
   font-size: 1.6rem;
   z-index: 10;
 }
+
+/* === PILARES DECORATIVOS === */
+.splash-right {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+
+.splash-pillar {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+  pointer-events: none;  /* decorativo: no interactivo */
+  user-select: none;
+  width: clamp(120px, 14vw, 200px);
+  height: clamp(120px, 14vw, 200px);
+}
+
+.splash-pilar-creacion {
+  background-color: rgba(255, 255, 0, 0.58);
+  border: 3px solid #a46e1b;
+  color: white;
+  top: 8%;
+  left: 30%;
+}
+
+.splash-pilar-difusion {
+  background-color: rgba(0, 176, 240, 0.5);
+  border: 3px solid #212121;
+  color: #f1c232;
+  top: 8%;
+  left: 65%;
+}
+
+.splash-pilar-educacion {
+  background-color: rgba(240, 0, 154, 0.5);
+  border: 3px solid magenta;
+  color: #93c47d;
+  bottom: 20%;
+  left: 20%;
+}
+
+.splash-pilar-investigacion {
+  background-color: rgba(173, 173, 173, 0.4);
+  border: 3px solid #212121;
+  color: white;
+  bottom: 20%;
+  left: 60%;
+}

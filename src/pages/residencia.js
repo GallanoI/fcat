@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Carousel from '../components/carousel';
 import SplashScreenResidencia from '../components/splashScreenResidencia';
 import CircleItemMenu from '../components/circleItemMenu';
 import Zoom from '../components/zoom';
+import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
 import './residencia.css';
 
 const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
@@ -13,6 +14,7 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
   const [activeLogoTheme, setActiveLogoTheme] = useState('creacion');
   const pageRef = useRef(null);
   const section1Ref = useRef(null);
+  const section2Ref = useRef(null);
   const section4Ref = useRef(null);
   
   const { scrollYProgress } = useScroll({
@@ -91,6 +93,24 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
   const texto3 = 'La residencia también busca un vínculo vivo con la comunidad y el ecosistema local, entendiendo la creación como una forma de habitar la pregunta. Venir a CAT es asumir un desafío creativo y espiritual: transformar el proceso artístico en presencia, experiencia y territorio.';
 
   const navigate = useNavigate();
+  const location = useLocation();
+  // Ref para el destino de scroll al volver desde investigacion o perfilResidente
+  const scrollTargetRef = useRef(location.state?.scrollTo || null);
+
+  // Efecto: ejecutar scroll al destino después de que termine el splash
+  useEffect(() => {
+    if (showSplash) return;
+    const target = scrollTargetRef.current;
+    if (!target || !pageRef.current) return;
+    scrollTargetRef.current = null;
+    const refs = { materiales: section4Ref, residentes: section2Ref };
+    const targetRef = refs[target];
+    if (targetRef?.current) {
+      setTimeout(() => {
+        pageRef.current.scrollTo({ top: targetRef.current.offsetTop, behavior: 'smooth' });
+      }, 350);
+    }
+  }, [showSplash]);
 
   if (showSplash) {
     return <SplashScreenResidencia onFinish={() => setShowSplash(false)} />;
@@ -147,7 +167,7 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
       </section>
 
       {/* SECCIÓN 2: RESIDENTES */}
-      <section className="section-16-9 slide-canvas" style={{ backgroundImage: `url(${require('../assets/fotos/residencia/res2.JPEG')})` }}>
+      <section className="section-16-9 slide-canvas" ref={section2Ref} style={{ backgroundImage: `url(${require('../assets/fotos/residencia/res2.JPEG')})` }}>
         <div className="residentes-title">
           <h2>RESIDENTES CAT</h2>
         </div>
@@ -211,7 +231,11 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
         </div>
       </section>
 
-      <Zoom item={zoomItem} onClose={() => setZoomItem(null)} />
+      <Zoom
+        item={zoomItem}
+        onClose={() => setZoomItem(null)}
+        overlayColor={ZOOM_OVERLAY_COLORS.materialesResidencia}
+      />
 
 
     </div>

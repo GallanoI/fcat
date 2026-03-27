@@ -1,9 +1,41 @@
 .resident-profile {
+  /* --- Variables de tipografía --- */
+  --resident-name-size: 42px;
+  --resident-text-size: 11px;
+  --resident-back-size: 0.95rem;
+  --resident-header-pad: 20px;
+
   display: flex;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   background: #000;
+}
+
+/* Cabecera con botón volver + nombre */
+.resident-header {
+  padding: 16px 20px 0;
+  box-sizing: border-box;
+}
+
+.resident-back-btn {
+  background: none;
+  border: 1px solid #888;
+  color: #333;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--resident-back-size);
+  padding: 6px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.resident-back-btn:hover {
+  background: #f8e71c;
+  border-color: #a46e1b;
+  color: #000;
 }
 
 /* columna izquierda fija y scrollable */
@@ -17,15 +49,15 @@
 }
 
 .resident-name {
-  padding: 20px;
-  margin: 0 0 100px 0;
+  padding: var(--resident-header-pad);
+  margin: 0 0 60px 0;
   text-align: center;
 }
 
 .resident-name-text {
   font-family: 'Oswald', sans-serif;
   font-weight: 400;
-  font-size: 42px;
+  font-size: var(--resident-name-size);
   margin: 0;
   background: #f8e71c;
   display: inline-block;
@@ -40,7 +72,7 @@
 .resident-text {
   font-family: 'Oswald', sans-serif;
   font-weight: 400;
-  font-size: 11px;
+  font-size: var(--resident-text-size);
   line-height: 1.5;
   text-align: justify;
   margin: 0 0 16px;
@@ -57,7 +89,7 @@
 /* columna derecha fija (no scrollea) */
 .resident-right {
   width: 48%;
-  background: #f8e71c;
+  background: #f8e71c; /*cambiar a rgba*/
   position: relative;
   display: flex;
   align-items: center;

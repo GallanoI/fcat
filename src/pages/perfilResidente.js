@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Carousel from '../components/carousel';
 import Zoom from '../components/zoom';
 import { residentesData } from '../data';
+import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
 import './perfilResidente.css';
 
 const PerfilResidente = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const data = residentesData[id];
   const [zoomIndex, setZoomIndex] = useState(null);
 
@@ -27,8 +29,16 @@ const PerfilResidente = () => {
   return (
     <div className="resident-profile">
       <div className="resident-left">
-        <div className="resident-name">
-          <h1 className="resident-name-text"> {data.nombre} </h1>
+        <div className="resident-header">
+          <button
+            className="resident-back-btn"
+            onClick={() => navigate('/creacion/residencia', { state: { scrollTo: 'residentes' } })}
+          >
+            ← Residentes
+          </button>
+          <div className="resident-name">
+            <h1 className="resident-name-text"> {data.nombre} </h1>
+          </div>
         </div>
         <div className="resident-info">
           {sections.map((item, index) => {
@@ -66,7 +76,11 @@ const PerfilResidente = () => {
       </div>
 
       {zoomIndex !== null && (
-        <Zoom item={carouselImages[zoomIndex]} onClose={() => setZoomIndex(null)} />
+        <Zoom
+          item={carouselImages[zoomIndex]}
+          onClose={() => setZoomIndex(null)}
+          overlayColor={ZOOM_OVERLAY_COLORS.residentes}
+        />
       )}
     </div>
   );

@@ -1,0 +1,42 @@
+.quienes-page {
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.quienes-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  padding: 14px 30px;
+  box-sizing: border-box;
+  z-index: 100;
+  text-align: center;
+}
+
+.quienes-title {
+  margin: 0;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+  letter-spacing: 0.12em;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Canvas con posicionamiento absoluto para el zigzag */
+.quienes-canvas {
+  position: relative;
+  width: 100%;
+  /* Altura suficiente para los 8 círculos en zigzag
+     El último círculo está a top 106% + circle-height ~16vw ≈ 16% => total ~122% */
+  height: calc(106% + clamp(160px, 16vw, 220px) + 40px);
+  min-height: 800px;
+}

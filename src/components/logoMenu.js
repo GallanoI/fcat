@@ -7,7 +7,7 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
   const navigate = useNavigate();
   const location = useLocation();
 
-  const options = ["Inicio", "Quienes Somos", "Misión y Visión", "Opción 3", "Opción 4", "Opción 5"];
+  const options = ["Inicio", "Quienes Somos", "Misión y Visión", "Opcion 3"];
 
   // Configuración de colores de los pilares
   const pillarConfigs = {
@@ -77,6 +77,10 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
         onRequestInicioSplash();
       }
       navigate("/");
+    } else if (opt === "Quienes Somos") {
+      navigate("/quienes");
+    } else if (opt === "Misión y Visión") {
+      navigate("/vmv");
     } else {
       navigate(`/${opt.toLowerCase().replace(/ /g, "-")}`);
     }
@@ -123,7 +127,11 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
           </div>
         ) : (
           <img 
-            src={isHovered ? `${publicUrl}/logoFCAT-N.png` : `${publicUrl}/logoFCAT.png`} 
+            src={
+              isResidentView
+                ? (isHovered ? `${publicUrl}/logoFCAT.png` : `${publicUrl}/logoFCAT-N.png`)
+                : (isHovered ? `${publicUrl}/logoFCAT-N.png` : `${publicUrl}/logoFCAT.png`)
+            } 
             alt="Logo" 
             className="logo-img"
           />

@@ -54,8 +54,30 @@ const Audiovisual = () => {
         style={{ 
             position: 'absolute',
             top: '60%', 
-            left: '9%',
+            left: '6%',
             fontSize: '1.8rem',
+            }} />
+      <CircleItemMenu 
+        title="Si algún día desaparezco" 
+        className="c-creacion" 
+        isSubcategory={true} 
+        textColor="black"
+        style={{ 
+            position: 'absolute',
+            top: '60%', 
+            left: '25%',
+            fontSize: '1.6rem',
+            }} />
+      <CircleItemMenu 
+        title="Guardianes de la oscuridad" 
+        className="c-creacion" 
+        isSubcategory={true} 
+        textColor="black"
+        style={{ 
+            position: 'absolute',
+            top: '60%', 
+            left: '44%',
+            fontSize: '1.6rem',
             }} />
       <CircleItemMenu 
         title="Isla Mocha" 
@@ -65,7 +87,7 @@ const Audiovisual = () => {
         style={{ 
             position: 'absolute',
             top: '60%', 
-            left: '42%',
+            left: '63%',
             fontSize: '1.8rem',
             }} />
       <CircleItemMenu 
@@ -76,7 +98,7 @@ const Audiovisual = () => {
         style={{ 
             position: 'absolute',
             top: '60%', 
-            left: '75%',
+            left: '82%',
             fontSize: '1.8rem',
             }} />
 

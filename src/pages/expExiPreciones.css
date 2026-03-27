@@ -93,7 +93,7 @@ const photoData = {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .exp-left-changing-text {
@@ -106,6 +106,7 @@ const photoData = {
   text-align: left;
   -webkit-text-stroke: 1px #000;
   padding: 2rem 1.5rem;
+  padding-top: clamp(2rem, 12%, 5rem);
   box-sizing: border-box;
 }
 
@@ -148,8 +149,8 @@ const photoData = {
 
 .exp-audio-btn {
   position: absolute;
-  right: -15px;
-  bottom: -15px;
+  right: 8px;
+  bottom: 8px;
 }
 
 .exp-carousel-wrap {

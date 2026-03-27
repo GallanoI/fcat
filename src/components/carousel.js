@@ -169,6 +169,24 @@ const handlePrev = useCallback(() => {
     };
   });
 
+  // Trackpad: scroll horizontal con dos dedos
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport || totalItems <= 1) return;
+    let cooldown = false;
+    const handleWheelEvent = (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      if (cooldown) return;
+      cooldown = true;
+      setTimeout(() => { cooldown = false; }, 420);
+      if (e.deltaX > 0) handleNext();
+      else handlePrev();
+    };
+    viewport.addEventListener('wheel', handleWheelEvent, { passive: false });
+    return () => viewport.removeEventListener('wheel', handleWheelEvent);
+  }, [totalItems, handleNext, handlePrev]);
+
   const goTo = (realIndex) => {
     if (totalItems <= 0) return;
     setTrackIndex(cloneCount + realIndex);

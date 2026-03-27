@@ -1,11 +1,15 @@
 import React from 'react';
 import './zoom.css';
 
-const Zoom = ({ item, onClose }) => {
+const Zoom = ({ item, onClose, overlayColor }) => {
   if (!item) return null;
 
   return (
-    <div className="zoom-overlay" onClick={onClose}>
+    <div
+      className="zoom-overlay"
+      onClick={onClose}
+      style={overlayColor ? { '--zoom-overlay-color': overlayColor } : undefined}
+    >
       {item.type === 'video' ? (
         <video
           className="zoom-media"

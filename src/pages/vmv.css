@@ -1,0 +1,136 @@
+.vmv-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Oswald', sans-serif;
+}
+
+/* === TOP PANEL — 1/3 === */
+.vmv-top-panel {
+  flex: 0 0 33.333%;
+  background-image: url('../assets/fotos/fondos/investigacion.JPEG');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.vmv-top-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.vmv-top-title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+}
+
+.vmv-top-subtitle {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+  font-weight: 200;
+  font-style: italic;
+  letter-spacing: 0.06em;
+}
+
+/* === BOTTOM CONTENT — 2/3 === */
+.vmv-bottom {
+  flex: 1 1 66.666%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  overflow: hidden;
+}
+
+.vmv-column {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.vmv-column:last-child {
+  border-right: none;
+}
+
+.vmv-column-mid {
+  background: rgba(173, 173, 173, 0.08);
+}
+
+/* Colores de encabezado por columna */
+.vmv-col-title {
+  margin: 0;
+  padding: 24px 30px 20px;
+  font-size: clamp(1.6rem, 2.8vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  border-bottom: 3px solid currentColor;
+  flex-shrink: 0;
+}
+
+.vmv-col-title-vision {
+  background: rgba(173, 173, 173, 0.3);
+  color: #212121;
+}
+
+.vmv-col-title-mision {
+  background: rgba(173, 173, 173, 0.5);
+  color: #212121;
+}
+
+.vmv-col-title-valores {
+  background: rgba(173, 173, 173, 0.3);
+  color: #212121;
+}
+
+.vmv-col-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 30px;
+  box-sizing: border-box;
+}
+
+.vmv-col-text {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.3vw, 1.3rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: #222;
+  text-align: justify;
+}
+
+.vmv-valores-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vmv-valores-list li {
+  font-size: clamp(1.1rem, 1.8vw, 1.8rem);
+  font-weight: 300;
+  color: #222;
+  padding-left: 16px;
+  border-left: 4px solid rgba(173, 173, 173, 0.7);
+  line-height: 1.2;
+}

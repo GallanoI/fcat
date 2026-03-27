@@ -3,6 +3,7 @@ import Carousel from '../components/carousel';
 import DuTextColFond from '../components/duTextColFond';
 import RepAudio from '../components/repAudio';
 import Zoom from '../components/zoom';
+import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
 import './expExiPreciones.css';
 
 const ExpExiPreciones = () => {
@@ -53,7 +54,7 @@ const ExpExiPreciones = () => {
           src: duexpreContext(key),
           type: 'image',
           name: `dexp-${idx + 1}`,
-          leftText: data.leftText || '',
+          leftText: data.leftText || `Texto foto ${idx + 1}`,
           rightText: data.rightText || '',
           audio: data.audioFile ? audioByName[data.audioFile.toLowerCase()] : null,
         };
@@ -133,7 +134,11 @@ const ExpExiPreciones = () => {
         />
       </div>
 
-      <Zoom item={zoomItem} onClose={() => setZoomItem(null)} />
+      <Zoom
+        item={zoomItem}
+        onClose={() => setZoomItem(null)}
+        overlayColor={ZOOM_OVERLAY_COLORS.expExiPreciones}
+      />
     </div>
   );
 };

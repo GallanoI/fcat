@@ -43,7 +43,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
 
     audio.play().catch(() => {
       clearTimeout(finishTimeout);
-      finishTimeout = setTimeout(finishSplash, 5000);
+      finishTimeout = setTimeout(finishSplash, 50000);
     });
 
     return () => {
@@ -73,6 +73,25 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
   const slideRight = {
     hidden: { x: 200, opacity: 0 },
     visible: { x: 0, opacity: 1, transition: { duration: 3 } },
+  };
+
+  // Pilares decorativos: entran desde los bordes, inician 1s antes de que terminen los
+  // slides principales (dur 3s), o sea delay = 2s. Permanecen estáticos hasta que termina splash.
+  const pillarCreacion = {
+    hidden: { y: -320, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+  };
+  const pillarDifusion = {
+    hidden: { x: 320, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+  };
+  const pillarEducacion = {
+    hidden: { x: -320, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+  };
+  const pillarInvestigacion = {
+    hidden: { y: 320, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
   };
   const panelVariant = {
     hidden: { scale: 0, opacity: 0 },
@@ -130,7 +149,41 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
             Arte en movimiento
           </motion.p>
         </div>
-        <div className="splash-right" />
+        <div className="splash-right">
+          {/* Pilares decorativos: entran desde los 4 bordes */}
+          <motion.div
+            className="splash-pillar splash-pilar-creacion"
+            variants={pillarCreacion}
+            initial="hidden"
+            animate={animationReady ? 'visible' : 'hidden'}
+          >
+            Creación
+          </motion.div>
+          <motion.div
+            className="splash-pillar splash-pilar-difusion"
+            variants={pillarDifusion}
+            initial="hidden"
+            animate={animationReady ? 'visible' : 'hidden'}
+          >
+            Difusión
+          </motion.div>
+          <motion.div
+            className="splash-pillar splash-pilar-educacion"
+            variants={pillarEducacion}
+            initial="hidden"
+            animate={animationReady ? 'visible' : 'hidden'}
+          >
+            Educación
+          </motion.div>
+          <motion.div
+            className="splash-pillar splash-pilar-investigacion"
+            variants={pillarInvestigacion}
+            initial="hidden"
+            animate={animationReady ? 'visible' : 'hidden'}
+          >
+            Investigación
+          </motion.div>
+        </div>
       </div>
       <motion.div
         className="splash-panel"

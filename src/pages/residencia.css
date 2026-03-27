@@ -126,6 +126,16 @@
   text-align: center;
 }
 
+/* Contenedor del quote: centrar verticalmente en la celda de la grilla */
+.quote-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
 .materiales-section {
   background-image: url('../assets/fotos/fondos/investigacion.JPEG');
   background-size: cover;

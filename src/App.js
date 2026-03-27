@@ -16,6 +16,8 @@ import Educacion from './pages/educacion';
 import EscuelaNinos from './pages/escuelaNinos';
 import EscuelaCine from './pages/escuelaCine';
 import Investigacion from './pages/investigacion';
+import VMV from './pages/vmv';
+import Quienes from './pages/quienes';
 
 function App() {
   const shouldShowInitialSplash = !sessionStorage.getItem('visited');
@@ -30,6 +32,9 @@ function App() {
   const isResidentProfile =
     location.pathname.startsWith('/creacion/residencia/') &&
     location.pathname.split('/').filter(Boolean).length === 3;
+
+  const isLeftLogoView =
+    isResidentProfile || location.pathname.startsWith('/educacion/escuelaninos');
 
   useEffect(() => {
     document.title = 'F.C.A.T.';
@@ -67,7 +72,7 @@ function App() {
           <div className="main-layout">
             {!isResidenciaSplashVisible && (
               <LogoMenu
-                residentView={isResidentProfile}
+                residentView={isLeftLogoView}
                 onRequestInicioSplash={handleRequestInicioSplash}
                 themeOverride={logoThemeOverride}
               />
@@ -97,6 +102,9 @@ function App() {
               <Route path="/educacion/escuelacine" element={<EscuelaCine />} />
 
               <Route path="/investigacion" element={<Investigacion />} />
+
+              <Route path="/vmv" element={<VMV />} />
+              <Route path="/quienes" element={<Quienes />} />
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
