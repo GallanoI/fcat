@@ -68,38 +68,78 @@
   font-size: clamp(1.2rem, 2.5vw, 2.5rem);
   pointer-events: none;  /* decorativo: no interactivo */
   user-select: none;
-  width: clamp(120px, 14vw, 200px);
-  height: clamp(120px, 14vw, 200px);
+  width: clamp(170px, 20vw, 320px);
+  height: clamp(170px, 20vw, 320px);
 }
 
 .splash-pilar-creacion {
   background-color: rgba(255, 255, 0, 0.58);
-  border: 3px solid #a46e1b;
+  border: 4px solid #a46e1b;
   color: white;
-  top: 8%;
-  left: 30%;
+  top: 10%;
+  left: 29%;
 }
 
 .splash-pilar-difusion {
   background-color: rgba(0, 176, 240, 0.5);
-  border: 3px solid #212121;
-  color: #f1c232;
-  top: 8%;
-  left: 65%;
+  border: 4px solid #212121;
+  color: white;
+  top: 10%;
+  left: 47%;
 }
 
 .splash-pilar-educacion {
   background-color: rgba(240, 0, 154, 0.5);
-  border: 3px solid magenta;
+  border: 4px solid magenta;
   color: #93c47d;
-  bottom: 20%;
-  left: 20%;
+  top: 44%;
+  left: 29%;
 }
 
 .splash-pilar-investigacion {
   background-color: rgba(173, 173, 173, 0.4);
-  border: 3px solid #212121;
+  border: 4px solid #212121;
   color: white;
-  bottom: 20%;
-  left: 60%;
+  top: 44%;
+  left: 47%;
+}
+
+.movPilarText-creacion,
+.movPilarText-dif-lines,
+.movPilarText-educacion,
+.movPilarText-investigacion{
+  color: white !important;
+}
+
+.movPilarText-creacion,
+.movPilarText-educacion {
+  font-size: clamp(2rem, 4.2vw, 4rem) !important;
+}
+
+.movPilarText-investigacion {
+  font-size: clamp(3rem, 3.8vw, 4rem) !important;
+}
+
+.movPilarText-difusion {
+  position: relative;
+  display: inline-block;
+}
+
+.dif-lines {
+  font-size: clamp(2.5rem, 3.8vw, 4rem);
+  line-height: 1;
+  position: absolute;
+  right: -0.8em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dif-amp {
+  position: absolute;
+  right: -1.1em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: yellow;
+  font-size: clamp(3rem, 6.5vw, 7rem);
+  pointer-events: none;
 }

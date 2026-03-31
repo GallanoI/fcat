@@ -143,19 +143,19 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
               <p>
                 {texto1}
               </p>
-              <img
+              {/* <img
                 src={require('../assets/fotos/residencia/residentes/Ciro.jpg')}
                 alt=""
                 className="panel-img"
-              />
+              />*/}
               <p>
                 {texto2}
               </p>
-              <img
+              {/* <img
                 src={require('../assets/fotos/residencia/residentes/Kenji.JPEG')}
                 alt=""
                 className="panel-img"
-              />
+              />*/}
               <p>
                 {texto3}
               </p>

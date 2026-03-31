@@ -43,7 +43,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
 
     audio.play().catch(() => {
       clearTimeout(finishTimeout);
-      finishTimeout = setTimeout(finishSplash, 50000);
+      finishTimeout = setTimeout(finishSplash, 6000);
     });
 
     return () => {
@@ -68,30 +68,30 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
   };
   const slideLeft = {
     hidden: { x: -200, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 3 } },
+    visible: { x: 0, opacity: 1, transition: { duration: 4 } },
   };
   const slideRight = {
     hidden: { x: 200, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 3 } },
+    visible: { x: 0, opacity: 1, transition: { duration: 4 } },
   };
 
   // Pilares decorativos: entran desde los bordes, inician 1s antes de que terminen los
   // slides principales (dur 3s), o sea delay = 2s. Permanecen estáticos hasta que termina splash.
   const pillarCreacion = {
     hidden: { y: -320, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+    visible: { y: 0, opacity: 1, transition: { duration: 2, delay: 3, ease: 'easeOut' } },
   };
   const pillarDifusion = {
     hidden: { x: 320, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+    visible: { x: 0, opacity: 1, transition: { duration: 2, delay: 3, ease: 'easeOut' } },
   };
   const pillarEducacion = {
     hidden: { x: -320, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+    visible: { x: 0, opacity: 1, transition: { duration: 2, delay: 3, ease: 'easeOut' } },
   };
   const pillarInvestigacion = {
     hidden: { y: 320, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 3, delay: 2, ease: 'easeOut' } },
+    visible: { y: 0, opacity: 1, transition: { duration: 2, delay: 3, ease: 'easeOut' } },
   };
   const panelVariant = {
     hidden: { scale: 0, opacity: 0 },
@@ -114,6 +114,22 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
   const message = '“ Investigamos, Creamos, Educamos y Difundimos el Arte de Nuestro Territorio. ”';
   const words = message.split(' ');
 
+  const LEFT_MAIN_DURATION = 3;
+  const LEFT_FADE_GAP = 1.5;
+  const LEFT_FADE_DURATION = 1;
+
+  const leftFadeOutVariant = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 0,
+      transition: {
+        delay: LEFT_MAIN_DURATION + LEFT_FADE_GAP,
+        duration: LEFT_FADE_DURATION,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
     <motion.div
       className="slide-canvas bg-home"
@@ -123,7 +139,12 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
       exit={{ opacity: 0 }}
     >
       <div className="splash-grid">
-        <div className="splash-left">
+        <motion.div 
+          className="splash-left"
+          variants={leftFadeOutVariant}
+          initial="hidden"
+          animate={animationReady ? 'visible' : 'hidden'}
+        >
           <motion.img
             src={logoSrc}
             alt="Logo CAT"
@@ -148,7 +169,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
           >
             Arte en movimiento
           </motion.p>
-        </div>
+        </motion.div>
         <div className="splash-right">
           {/* Pilares decorativos: entran desde los 4 bordes */}
           <motion.div
@@ -157,7 +178,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
             initial="hidden"
             animate={animationReady ? 'visible' : 'hidden'}
           >
-            Creación
+            <div className="movPilarText-creacion">Creación</div>
           </motion.div>
           <motion.div
             className="splash-pillar splash-pilar-difusion"
@@ -165,7 +186,11 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
             initial="hidden"
             animate={animationReady ? 'visible' : 'hidden'}
           >
-            Difusión
+            <div className="movPilarText-difusion">
+              <div className="dif-lines">Eventos<br />Difusión</div>
+              <div className="dif-amp">&amp;</div>
+            </div>
+
           </motion.div>
           <motion.div
             className="splash-pillar splash-pilar-educacion"
@@ -173,7 +198,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
             initial="hidden"
             animate={animationReady ? 'visible' : 'hidden'}
           >
-            Educación
+            <div className="movPilarText-educacion">Educación</div>
           </motion.div>
           <motion.div
             className="splash-pillar splash-pilar-investigacion"
@@ -181,21 +206,28 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
             initial="hidden"
             animate={animationReady ? 'visible' : 'hidden'}
           >
-            Investigación
+            <div className="movPilarText-investigacion">Investigación</div>
           </motion.div>
         </div>
       </div>
-      <motion.div
-        className="splash-panel"
-        variants={panelVariant}
-        initial="hidden"
-        animate="visible"
-      >
-        {words.map((word, index) => (
-          <motion.span key={index} variants={wordVariant}>
-            {word}&nbsp;
-          </motion.span>
-        ))}
+      <motion.div 
+          className="splash-left"
+          variants={leftFadeOutVariant}
+          initial="hidden"
+          animate={animationReady ? 'visible' : 'hidden'}
+        >
+        <motion.div
+          className="splash-panel"
+          variants={panelVariant}
+          initial="hidden"
+          animate="visible"
+        >
+          {words.map((word, index) => (
+            <motion.span key={index} variants={wordVariant}>
+              {word}&nbsp;
+            </motion.span>
+          ))}
+        </motion.div>
       </motion.div>
     </motion.div>
   );
