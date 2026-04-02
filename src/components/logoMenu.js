@@ -64,11 +64,44 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
   const context = getContext();
   const publicUrl = process.env.PUBLIC_URL || '';
 
-  const handleLogoClick = () => {
-    if (location.pathname === '/' || location.pathname === '') {
-      return;
+  const getBackTarget = (pathname) => {
+    const cleanPath = pathname.replace(/\/+$/, '') || '/';
+    const segments = cleanPath.split('/').filter(Boolean);
+
+    // Ya estamos en raíz: no hacer nada
+    if (segments.length === 0) {
+      return null;
     }
-    navigate(-1);
+
+    // Caso especial: perfil residente -> residencia + scroll a residentes
+    const isResidentProfilePath =
+      segments[0] === 'creacion' &&
+      segments[1] === 'residencia' &&
+      segments.length === 3;
+
+    if (isResidentProfilePath) {
+      return {
+        path: '/creacion/residencia',
+        options: { state: { scrollTo: 'residentes' }, replace: true }
+      };
+    }
+
+    // Regla general: subir un nivel de ruta
+    if (segments.length === 1) {
+      return { path: '/', options: { replace: true } };
+    }
+
+    segments.pop();
+    return {
+      path: '/' + segments.join('/'),
+      options: { replace: true }
+    };
+  };
+
+  const handleLogoClick = () => {
+    const target = getBackTarget(location.pathname);
+    if (!target) return;
+    navigate(target.path, target.options);
   };
 
   const handleNavigation = (opt) => {
@@ -121,7 +154,7 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
       >
         {/* Si estamos en subcategoría y hay hover, mostramos el texto y tapamos el logo */}
         {context && isHovered ? (
-          <div className="logo-back-text" style={{ color: context.color }}>
+          <div className="logo-back-text" style={{ color: isResidentView ? '#000' : context.color }}>
             <span>Volver a la </span>
             <span>Página Anterior</span>
           </div>

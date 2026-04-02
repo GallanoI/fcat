@@ -51,10 +51,10 @@
 .ascending-container {
   position: absolute;
   width: 100%;
-  top: 120%;
+  bottom: -100%;
+  left: 0;
   display: flex;
   justify-content: center;
-  z-index: 3000;
 }
 
 .ascending-panel {
@@ -170,9 +170,15 @@
   transform-origin: bottom center;
 }
 
+.materiales-carousel-wrap .carousel-main {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
 .residentes-carousel .carousel-main {
   background-color: rgba(242, 255, 164, 0.6);
   border: 1px solid black;
+  border-radius: 5px;
 }
 
 .residentes-carousel .img-grid-container {

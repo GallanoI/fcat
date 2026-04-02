@@ -225,8 +225,13 @@ export const residentesData = {
       {
         type: 'text',
         content:
-          'Durante su paso por la Residencia CAT, el fotógrafo ha volcado su atención hacia la micro-ecología de la quebrada, sumergiéndose en la penumbra húmeda para rescatar la profunda delicadeza de los hongos del bosque. En este ejercicio de paciencia y atención plena, Wanders logra visibilizar lo imperceptible: esas formas de vida esenciales que suelen pasar inadvertidas ante la falta de atención de cada paso humano. Su lente actúa como un microscopio emocional, devolviéndole la importancia a lo pequeño y revelando la arquitectura frágil que sostiene el equilibrio del ecosistema.\n\nFernando Wanders se posiciona así como un descubridor de lo inmediato, un cronista que nos recuerda que la riqueza del territorio no está solo en el horizonte, sino en el detalle mínimo. Al igual que el carbón y la ceniza en el trabajo de sus pares, sus fotografías son rastros de una realidad latente que nos rodea, invitándonos a detener la marcha y reconocer, por fin, la complejidad y el misterio de lo que habitamos.',
+          'Durante su paso por la Residencia CAT, el fotógrafo ha volcado su atención hacia la micro-ecología de la quebrada, sumergiéndose en la penumbra húmeda para rescatar la profunda delicadeza de los hongos del bosque. En este ejercicio de paciencia y atención plena, Wanders logra visibilizar lo imperceptible: esas formas de vida esenciales que suelen pasar inadvertidas ante la falta de atención de cada paso humano. Su lente actúa como un microscopio emocional, devolviéndole la importancia a lo pequeño y revelando la arquitectura frágil que sostiene el equilibrio del ecosistema.',
       },
+      {
+        type: 'text',
+        content:
+          'Fernando Wanders se posiciona así como un descubridor de lo inmediato, un cronista que nos recuerda que la riqueza del territorio no está solo en el horizonte, sino en el detalle mínimo. Al igual que el carbón y la ceniza en el trabajo de sus pares, sus fotografías son rastros de una realidad latente que nos rodea, invitándonos a detener la marcha y reconocer, por fin, la complejidad y el misterio de lo que habitamos.',
+      }
     ],
     carousel: fernandoCarousel,
   },

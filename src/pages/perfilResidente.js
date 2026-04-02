@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Carousel from '../components/carousel';
 import Zoom from '../components/zoom';
 import { residentesData } from '../data';
@@ -8,7 +8,6 @@ import './perfilResidente.css';
 
 const PerfilResidente = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const data = residentesData[id];
   const [zoomIndex, setZoomIndex] = useState(null);
 
@@ -30,12 +29,6 @@ const PerfilResidente = () => {
     <div className="resident-profile">
       <div className="resident-left">
         <div className="resident-header">
-          <button
-            className="resident-back-btn"
-            onClick={() => navigate('/creacion/residencia', { state: { scrollTo: 'residentes' } })}
-          >
-            ← Residentes
-          </button>
           <div className="resident-name">
             <h1 className="resident-name-text"> {data.nombre} </h1>
           </div>

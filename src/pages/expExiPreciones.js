@@ -34,14 +34,30 @@ const ExpExiPreciones = () => {
   // Datos de cada foto: leftText, rightText, audioFile
   // idx es 0-based, pero los comentarios usan 1-based para claridad
   const photoData = useMemo(() => ({
-    0: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: 'wind.mp3' },
-    1: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: 'audio1.mp3' },
-    2: { leftText: 'CAJON FLAMENCO', rightText: 'MARCELO SOLAR', audioFile: 'audio54.mp3' },
-    3: { leftText: 'DANZA AFGANA', rightText: 'GRETA BELIMOVA', audioFile: null },
+    
+    // 0: { leftText: 'AAAAAAAAAAAAAAAAAAAAAAAA', rightText: 'GUSTAVO LOPEZ', audioFile: 'audio1.mp3' },
+    // 1: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: 'audio1.mp3' },
+    // 2: { leftText: 'CAJON FLAMENCO', rightText: 'MARCELO SOLAR', audioFile: 'audio54.mp3' },
+    // 3: { leftText: 'DANZA AFGANA', rightText: 'GRETA BELIMOVA', audioFile: null },
     // Agrega aquí los datos de las fotos 5-75 siguiendo el mismo formato
     // Ejemplo para más fotos:
     // 4: { leftText: 'TEXTO IZQUIERDO FOTO 5', rightText: 'TEXTO DERECHO FOTO 5', audioFile: 'audio66.mp3' },
-    // 5: { leftText: '...', rightText: '...', audioFile: null },
+    6: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
+    7: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
+    17: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
+    
+    
+    31: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
+    32: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
+    33: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
+    34: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
+    35: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
+    
+    40: { leftText: 'CAJON FLAMENCO', rightText: 'MARCELO SOLAR', audioFile: null },
+
+    52: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
+    53: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
+    54: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
   }), []);
 
   const duexpreItems = useMemo(
@@ -54,7 +70,7 @@ const ExpExiPreciones = () => {
           src: duexpreContext(key),
           type: 'image',
           name: `dexp-${idx + 1}`,
-          leftText: data.leftText || `Texto foto ${idx + 1}`,
+          leftText: data.leftText || '', //`Texto foto ${idx}`,
           rightText: data.rightText || '',
           audio: data.audioFile ? audioByName[data.audioFile.toLowerCase()] : null,
         };

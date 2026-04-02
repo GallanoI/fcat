@@ -6,7 +6,7 @@ const TunquenTV = () => {
   const socialLinks = [
     {
       label: 'Facebook',
-      href: 'https://www.facebook.com',
+      href: 'https://www.facebook.com/TUNQUENTV/',
       icon: <FaFacebook />,
     },
     {
@@ -22,14 +22,14 @@ const TunquenTV = () => {
   ];
 
   const tableItems = [
-    'Eco y algo más',
-    'Entrevista a artistas',
-    'Rescate de técnicas milenarias',
-    'Plataforma educativa',
-    'Antropología historia',
-    'De niños para niños',
-    'Video arte',
-    'Entre flores',
+    { label: 'Eco y algo más', href: 'https://facebook.com/' },
+    { label: 'Entrevista a artistas', href: 'https://www.facebook.com/reel/844984376033419/?s=single_unit&locale=es_LA' },
+    { label: 'Rescate de técnicas milenarias', href: 'https://www.facebook.com/reel/594218162049518?locale=es_LA' },
+    { label: 'Plataforma educativa', href: 'https://facebook.com/reel/959252644608536/?s=single_unit&locale=es_LA' },
+    { label: 'Antropología historia', href: 'https://www.facebook.com/reel/618794682335640?locale=es_LA' },
+    { label: 'De niños para niños', href: 'https://facebook.com/' },
+    { label: 'Video arte', href: 'https://www.facebook.com/reel/1092334144496048?locale=es_LA' },
+    { label: 'Entre flores', href: 'https://www.facebook.com/reel/1161508887637139?locale=es_LA' },
   ];
 
   return (
@@ -45,13 +45,13 @@ const TunquenTV = () => {
         <aside className="ttv-links-table" aria-label="Contenidos de Tunquén TV">
           {tableItems.map((item, index) => (
             <a
-              key={item}
-              href="https://www.youtube.com"
+              key={item.label}
+              href={item.href}
               target="_blank"
               rel="noreferrer"
               className={`ttv-table-row ${index % 2 === 0 ? 'alt-a' : 'alt-b'}`}
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </aside>

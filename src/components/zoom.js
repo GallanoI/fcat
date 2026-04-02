@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './zoom.css';
+import { useZoomPause } from '../config/zoomPauseContext';
 
 const Zoom = ({ item, onClose, overlayColor }) => {
+  const { registerZoomOpen, registerZoomClose } = useZoomPause();
+
+  useEffect(() => {
+    if (!item) return undefined;
+
+    registerZoomOpen();
+    return () => {
+      registerZoomClose();
+    };
+  }, [item, registerZoomOpen, registerZoomClose]);
+
   if (!item) return null;
 
   return (

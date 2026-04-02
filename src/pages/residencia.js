@@ -23,9 +23,8 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
     offset: ["start start", "end end"]
   });
 
-  const panelY = useTransform(scrollYProgress, [0, 1], ['0px', '-100vh'])
-  const ascendingTop = '120%';
-
+  const panelY = useTransform(scrollYProgress, [0, 0.5, 1], ['-10px', '-45vh', '-120vh']);
+  
   useEffect(() => {
     if (onSplashVisibilityChange) {
       onSplashVisibilityChange(showSplash);
@@ -129,7 +128,7 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
         
         <motion.div
           className="ascending-container"
-          style={{ y: panelY, zIndex: 1000, top: ascendingTop }}
+          style={{ y: panelY, zIndex: 3000}}
         >
           <div className="ascending-panel">
             <div className="left-col">
@@ -140,25 +139,29 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
               />
             </div>
             <div className="right-col">
+              <p><br /></p>
               <p>
                 {texto1}
               </p>
-              {/* <img
+              {/*<img
                 src={require('../assets/fotos/residencia/residentes/Ciro.jpg')}
                 alt=""
                 className="panel-img"
               />*/}
+              <p><br /></p>
               <p>
                 {texto2}
               </p>
-              {/* <img
+              {/*<img
                 src={require('../assets/fotos/residencia/residentes/Kenji.JPEG')}
                 alt=""
                 className="panel-img"
               />*/}
+              <p><br /></p>
               <p>
                 {texto3}
               </p>
+              <p><br /></p>
             </div>
           </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import './carousel.css';
+import { useZoomPause } from '../config/zoomPauseContext';
 
 export const createNamedCarouselProps = (captionPosition = 'top') => ({
   variant: 'named',
@@ -36,6 +37,7 @@ const Carousel = ({
   const trackRef = useRef(null);
   const viewportRef = useRef(null);
   const autoPlayTimerRef = useRef(null);
+  const { isZoomActive } = useZoomPause();
 
   const normalizedItems = useMemo(() => {
   return Array.isArray(items) ? items : [];
@@ -114,13 +116,13 @@ const handlePrev = useCallback(() => {
   // Resetear autoplay cuando cambia el index
   useEffect(() => {
     if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
-    if (totalItems > 1) {
+    if (!isZoomActive && totalItems > 1) {
       autoPlayTimerRef.current = setInterval(handleNext, autoPlayInterval);
     }
     return () => {
       if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
     };
-  }, [handleNext, autoPlayInterval, totalItems]);
+  }, [handleNext, autoPlayInterval, totalItems, isZoomActive]);
 
   const handleMouseDown = (e) => {
     if (!viewportRef.current || totalItems <= 1) return;
@@ -155,7 +157,7 @@ const handlePrev = useCallback(() => {
     setTrackIndex(newTrackIndex);
     setDragOffset(0);
 
-    if (totalItems > 1) {
+    if (!isZoomActive && totalItems > 1) {
       autoPlayTimerRef.current = setInterval(handleNext, autoPlayInterval);
     }
   };
