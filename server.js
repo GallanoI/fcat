@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const multer = require('multer');
-const Database = require('better-sqlite3');
+const { DatabaseSync: Database } = require('node:sqlite');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -207,9 +207,9 @@ function migrateCarouselItems(db) {
 
 function initDatabase() {
   db = new Database(DB_PATH);
-  db.pragma('journal_mode = WAL');
-  db.pragma('foreign_keys = ON');
-  db.pragma('encoding = "UTF-8"');
+  db.exec('PRAGMA journal_mode = WAL');
+  db.exec('PRAGMA foreign_keys = ON');
+  db.exec('PRAGMA encoding = "UTF-8"');
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS Taller (
