@@ -8,9 +8,6 @@
 # testing
 /coverage
 
-# production
-/build
-
 # base de datos local
 /data
 
