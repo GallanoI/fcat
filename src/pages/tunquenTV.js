@@ -22,12 +22,11 @@ const TunquenTV = () => {
   ];
 
   const tableItems = [
-    { label: 'Eco y algo más', href: 'https://facebook.com/' },
+    { label: 'Eco y algo más', href: 'https://www.facebook.com/share/v/17bAe7mpJ6/' },
     { label: 'Entrevista a artistas', href: 'https://www.facebook.com/reel/844984376033419/?s=single_unit&locale=es_LA' },
     { label: 'Rescate de técnicas milenarias', href: 'https://www.facebook.com/reel/594218162049518?locale=es_LA' },
     { label: 'Plataforma educativa', href: 'https://facebook.com/reel/959252644608536/?s=single_unit&locale=es_LA' },
     { label: 'Antropología historia', href: 'https://www.facebook.com/reel/618794682335640?locale=es_LA' },
-    { label: 'De niños para niños', href: 'https://facebook.com/' },
     { label: 'Video arte', href: 'https://www.facebook.com/reel/1092334144496048?locale=es_LA' },
     { label: 'Entre flores', href: 'https://www.facebook.com/reel/1161508887637139?locale=es_LA' },
   ];
@@ -35,7 +34,7 @@ const TunquenTV = () => {
   return (
     <div
       className="tunquen-tv-page"
-      style={{ backgroundImage: `url(${require('../assets/fotos/fondos/audiovisual.jpg')})` }}
+      style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/assets/fotos/fondos/audiovisual.jpg)` }}
     >
       <header className="ttv-panel ttv-panel-top">
         <h1>TUNQUÉN TV</h1>

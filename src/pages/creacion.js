@@ -7,7 +7,7 @@ const Creacion = () => {
     <div className="creacion-page full-bg">
       <CircleItemMenu
         title="Residencias"
-        className="c-creacion"
+        className="c-creacion creacion-residencias"
         isSubcategory={true}
         to="/creacion/residencia"
         style={{
@@ -21,7 +21,7 @@ const Creacion = () => {
       />
       <CircleItemMenu
         title="Audiovisual"
-        className="c-creacion"
+        className="c-creacion creacion-audiovisual"
         isSubcategory={true}
         to="/creacion/audiovisual"
         style={{

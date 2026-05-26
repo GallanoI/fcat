@@ -9,16 +9,23 @@ const Investigacion = () => {
     <div className="investigacion-page full-bg">
       <CircleItemMenu
         title="Materiales"
-        className="c-investigacion"
+        className="c-investigacion inv-materiales"
         isSubcategory={true}
         onClick={() => navigate('/creacion/residencia', { state: { scrollTo: 'materiales' } })}
-        style={{ position: 'absolute', top: '20%', left: '45%', width: '210px', height: '210px' }}
+        style={{ position: 'absolute', top: '20%', left: '35%', width: '230px', height: '230px' }}
       />
       <CircleItemMenu
         title="Datos Plataforma"
-        className="c-investigacion"
+        className="c-investigacion edu-new-item inv-datos"
         isSubcategory={true}
-        style={{ position: 'absolute', top: '55%', left: '55%', width: '190px', height: '190px' }}
+        style={{ position: 'absolute', top: '55%', left: '65%', width: '200px', height: '200px' }}
+        hoverTitle={
+          <span>
+            Proyecto en
+            <br />
+            Desarrollo
+          </span>
+        }
       />
     </div>
   );

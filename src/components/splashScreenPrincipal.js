@@ -1,59 +1,87 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import './splashScreenPrincipal.css';
-import windAudio from '../assets/audios/wind.mp3';
+const windAudio = process.env.PUBLIC_URL + '/assets/audios/wind.mp3';
 
 const SplashScreenPrincipal = ({ onFinish, trigger }) => {
   const audioRef = useRef(null);
   const [animationReady, setAnimationReady] = useState(false);
 
   useEffect(() => {
+    const FADE_DURATION = 1.5;
+
     const audio = new Audio(windAudio);
     audioRef.current = audio;
-    audio.volume = 0.9;
 
-    let finishTimeout;
+    let audioCtx = null;
+    let gainNode = null;
+    let finishTimeout = null;
     let hasFinished = false;
 
     const finishSplash = () => {
-      if (hasFinished) {
-        return;
-      }
+      if (hasFinished) return;
       hasFinished = true;
+      clearTimeout(finishTimeout);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
+      }
+      if (audioCtx) {
+        audioCtx.close();
+        audioCtx = null;
       }
       onFinish();
     };
 
-    // Caso 1: aparece al inicio al entrar por primera vez.
-    // Caso 2: aparece cuando se presiona Inicio desde LogoMenu.
     const startVisualTimer = setTimeout(() => {
       setAnimationReady(true);
     }, 220);
 
-    audio.onended = finishSplash;
-    audio.onloadedmetadata = () => {
+    const setupAndPlay = () => {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaElementSource(audio);
+      gainNode = audioCtx.createGain();
+      gainNode.gain.setValueAtTime(0.9, audioCtx.currentTime);
+      source.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
       if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        clearTimeout(finishTimeout);
-        finishTimeout = setTimeout(finishSplash, (audio.duration * 1000) + 100);
+        const fadeStart = audioCtx.currentTime + Math.max(0, audio.duration - FADE_DURATION);
+        const fadeEnd = audioCtx.currentTime + audio.duration;
+        gainNode.gain.setValueAtTime(0.9, fadeStart);
+        gainNode.gain.linearRampToValueAtTime(0, fadeEnd);
+        finishTimeout = setTimeout(finishSplash, (audio.duration * 1000) + 300);
+      } else {
+        finishTimeout = setTimeout(finishSplash, 6000);
       }
+
+      audio.play().catch(() => {
+        clearTimeout(finishTimeout);
+        finishTimeout = setTimeout(finishSplash, 6000);
+      });
     };
 
-    audio.play().catch(() => {
-      clearTimeout(finishTimeout);
-      finishTimeout = setTimeout(finishSplash, 6000);
-    });
+    audio.onended = finishSplash;
+
+    if (audio.readyState >= 1) {
+      setupAndPlay();
+    } else {
+      audio.addEventListener('loadedmetadata', setupAndPlay, { once: true });
+      audio.load();
+    }
 
     return () => {
       clearTimeout(startVisualTimer);
       clearTimeout(finishTimeout);
+      audio.removeEventListener('loadedmetadata', setupAndPlay);
       if (audioRef.current) {
         audioRef.current.onended = null;
-        audioRef.current.onloadedmetadata = null;
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
+      }
+      if (audioCtx) {
+        audioCtx.close();
+        audioCtx = null;
       }
     };
   }, [onFinish, trigger]);
@@ -75,8 +103,6 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
     visible: { x: 0, opacity: 1, transition: { duration: 4 } },
   };
 
-  // Pilares decorativos: entran desde los bordes, inician 1s antes de que terminen los
-  // slides principales (dur 3s), o sea delay = 2s. Permanecen estáticos hasta que termina splash.
   const pillarCreacion = {
     hidden: { y: -320, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 2, delay: 3, ease: 'easeOut' } },
@@ -171,7 +197,6 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
           </motion.p>
         </motion.div>
         <div className="splash-right">
-          {/* Pilares decorativos: entran desde los 4 bordes */}
           <motion.div
             className="splash-pillar splash-pilar-creacion"
             variants={pillarCreacion}
@@ -224,7 +249,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
         >
           {words.map((word, index) => (
             <motion.span key={index} variants={wordVariant}>
-              {word}&nbsp;
+              {word}{index < words.length - 1 ? ' ' : ''}
             </motion.span>
           ))}
         </motion.div>

@@ -1,3 +1,25 @@
+@media (max-width: 800px) {
+  .exp-carousel-audio-btn {
+    width: var(--exp-carousel-audio-btn-size-800, 54px) !important; /* <---- cambiar */
+    height: var(--exp-carousel-audio-btn-size-800, 54px) !important; /* <---- cambiar */
+    font-size: var(--exp-carousel-audio-btn-font-800, 1.2rem) !important; /* <---- cambiar */
+    right: var(--exp-carousel-audio-btn-right-800, 2vw) !important; /* <---- cambiar */
+    bottom: var(--exp-carousel-audio-btn-bottom-800, -7vw) !important; /* <---- cambiar */
+    position: absolute !important;
+    z-index: 40;
+  }
+}
+@media (max-width: 480px) {
+  .exp-carousel-audio-btn {
+    width: var(--exp-carousel-audio-btn-size-480, 38px) !important; /* <---- cambiar */
+    height: var(--exp-carousel-audio-btn-size-480, 38px) !important; /* <---- cambiar */
+    font-size: var(--exp-carousel-audio-btn-font-480, 0.9rem) !important; /* <---- cambiar */
+    right: var(--exp-carousel-audio-btn-right-480, 2vw) !important; /* <---- cambiar */
+    bottom: var(--exp-carousel-audio-btn-bottom-480, -10vw) !important; /* <---- cambiar */
+    position: absolute !important;
+    z-index: 40;
+  }
+}
 .rep-audio-btn {
   border: 1px solid;
   border-radius: 50%;

@@ -1,20 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import './unQuien.css';
 
-/**
- * UnQuien — círculo de miembro del equipo.
- * Props:
- *   name        — nombre completo
- *   role        — cargo / descripción breve
- *   info        — texto largo (aparece en hover)
- *   photoSrc    — src de la foto
- *   pilarColor  — color de fondo del círculo (rgba)
- *   borderColor — color del borde (string)
- *   textColor   — color del texto (string)
- *   style       — estilos inline adicionales (posición zigzag)
- *   className   — clase extra
- */
 const UnQuien = ({
   name = '',
   role = '',
@@ -23,43 +9,57 @@ const UnQuien = ({
   pilarColor = 'rgba(173,173,173,0.4)',
   borderColor = '#212121',
   textColor = 'white',
+  side = 'left',
   style = {},
   className = '',
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const {
+    top,
+    left,
+    width = 'clamp(170px, 16vw, 220px)',
+    height = 'clamp(170px, 16vw, 220px)',
+    ...restStyle
+  } = style;
+
+  const isRight = side === 'right';
+  const displayName = role ? `${name} - ${role}` : name;
 
   return (
-    <motion.div
-      className={`unquien-circle ${className}`}
+    <div
+      className={`unquien-entry ${isRight ? 'is-right' : 'is-left'} ${className}`.trim()}
       style={{
-        backgroundColor: pilarColor,
-        border: `4px solid ${borderColor}`,
+        top,
+        left,
         color: textColor,
-        ...style,
+        '--unquien-circle-width': width,
+        '--unquien-circle-height': height,
+        '--unquien-panel-width': '280px',
+        ...restStyle,
       }}
-      whileHover={{ scale: 1.12 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered ? (
-        <div className="unquien-info-panel">
-          <p className="unquien-info-name">{name}</p>
-          {role && <p className="unquien-info-role">{role}</p>}
+      <div
+        className="unquien-circle"
+        style={{
+          backgroundColor: pilarColor,
+          borderColor,
+        }}
+      >
+        {photoSrc && <img src={photoSrc} alt={name} className="unquien-photo" />}
+      </div>
+
+      <div className="unquien-text-shell">
+        <p className="unquien-name">{displayName}</p>
+        <div
+          className="unquien-info-panel"
+          style={{
+            backgroundColor: pilarColor,
+            borderColor,
+          }}
+        >
           {info && <p className="unquien-info-text">{info}</p>}
         </div>
-      ) : (
-        <div className="unquien-default-panel">
-          {photoSrc && (
-            <img
-              src={photoSrc}
-              alt={name}
-              className="unquien-photo"
-            />
-          )}
-          <p className="unquien-name">{name}</p>
-        </div>
-      )}
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

@@ -1,0 +1,321 @@
+.zoom-info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: block;
+  padding: 0;
+  box-sizing: border-box;
+  background: var(--zoom-overlay-color, rgba(248, 231, 28, 1));
+}
+
+.zoom-info-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.zoom-info-panel {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  display: grid;
+  grid-template-columns: 4fr 12fr;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.zoom-info-info-col {
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px 10px 24px 0;
+  box-sizing: border-box;
+}
+
+.zoom-info-meta {
+  width: min(100%, 320px);
+  margin-left: clamp(18px, 2vw, 30px);
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 24px);
+}
+
+.zoom-info-meta-row {
+  margin: 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  color: #000;
+  overflow-wrap: anywhere;
+}
+
+.zoom-info-meta-label {
+  font-weight: 500;
+}
+
+.zoom-info-photo-col {
+  background: rgba(248, 231, 28, 1);
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.zoom-info-media-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: transparent;
+  overflow: hidden;
+}
+
+.zoom-info-media-stage.is-landscape {
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  margin: auto 20px 20px 20px;
+  align-self: flex-end;
+  justify-content: flex-start;
+}
+
+.zoom-info-media-stage.is-portrait {
+  width: calc(100% - 56px);
+  height: calc(100% - 32px);
+  margin: 16px 28px 16px auto;
+}
+
+.zoom-info-media {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  background: transparent;
+}
+
+.zoom-info-title-wrap {
+  position: absolute;
+  top: 70px;
+  left: 25%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zoom-info-title-half {
+  position: absolute;
+  top: 0;
+  background: rgba(248, 231, 28, 1);
+  padding: 8px 16px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 4vw, 4rem);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.zoom-info-title-first {
+  right: 0px;
+  color: #000;
+  -webkit-text-stroke: 1px #fff;
+}
+
+.zoom-info-title-last {
+  left: 0px;
+  color: #fff;
+  -webkit-text-stroke: 1px #000;
+}
+
+@media (max-width: 900px) {
+  .zoom-info-overlay {
+    padding: 0;
+  }
+}
+
+@media (max-width: 800px) {
+  .zoom-info-shell {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 25%,
+      rgba(248, 231, 28, 1) 25%,
+      rgba(248, 231, 28, 1) 100%
+    );
+  }
+
+  .zoom-info-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .zoom-info-title-wrap {
+    top: 28px;
+    left: 25%;
+  }
+
+  .zoom-info-title-half {
+    background: rgba(248, 231, 28, 1);
+    font-size: clamp(1.8rem, 6vw, 3.2rem);
+    padding: 8px 16px;
+  }
+
+  .zoom-info-title-first {
+    color: #000;
+    -webkit-text-stroke: 1px #fff;
+  }
+
+  .zoom-info-title-last {
+    color: #fff;
+    -webkit-text-stroke: 1px #000;
+  }
+
+  .zoom-info-photo-col {
+    order: 1;
+    width: 100%;
+    min-height: 100vh;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    padding-top: 82px;
+    box-sizing: border-box;
+  }
+
+  .zoom-info-media-stage.is-landscape {
+    width: calc(100% - 28px);
+    height: calc(100vh - 118px);
+    margin: 0 14px 18px;
+    align-self: center;
+    justify-content: center;
+  }
+
+  .zoom-info-media-stage.is-portrait {
+    width: calc(100% - 36px);
+    height: calc(100vh - 112px);
+    margin: 0 18px 18px;
+  }
+
+  .zoom-info-info-col {
+    order: 2;
+    width: 100%;
+    min-height: auto;
+    background: transparent;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 26px;
+    padding: 38px 10px 32px 0;
+  }
+
+  .zoom-info-meta {
+    width: min(78%, 320px);
+    margin-left: clamp(12px, 2vw, 24px);
+    margin-right: 0;
+  }
+
+  .zoom-info-meta-row {
+    font-size: 1.28rem;
+    line-height: 1.28;
+  }
+}
+
+@media (max-width: 480px) {
+  .zoom-info-shell {
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 25%,
+      rgba(248, 231, 28, 1) 25%,
+      rgba(248, 231, 28, 1) 100%
+    );
+  }
+
+  .zoom-info-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .zoom-info-title-wrap {
+    top: 20px;
+    left: 25%;
+  }
+
+  .zoom-info-title-half {
+    background: rgba(248, 231, 28, 1);
+    font-size: clamp(1.3rem, 7vw, 2.2rem);
+    padding: 6px 12px;
+  }
+
+  .zoom-info-title-first {
+    color: #000;
+    -webkit-text-stroke: 1px #fff;
+  }
+
+  .zoom-info-title-last {
+    color: #fff;
+    -webkit-text-stroke: 1px #000;
+  }
+
+  .zoom-info-photo-col {
+    order: 1;
+    width: 100%;
+    min-height: 100vh;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    padding-top: 70px;
+    box-sizing: border-box;
+  }
+
+  .zoom-info-media-stage.is-landscape {
+    width: calc(100% - 16px);
+    height: calc(100vh - 98px);
+    margin: 0 8px 14px;
+    align-self: center;
+    justify-content: center;
+  }
+
+  .zoom-info-media-stage.is-portrait {
+    width: calc(100% - 22px);
+    height: calc(100vh - 92px);
+    margin: 0 11px 14px;
+  }
+
+  .zoom-info-info-col {
+    order: 2;
+    width: 100%;
+    min-height: auto;
+    background: transparent;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 22px;
+    padding: 22px 8px 32px 0;
+  }
+
+  .zoom-info-meta {
+    width: min(82%, 250px);
+    margin-left: 10px;
+    margin-right: 0;
+    gap: 14px;
+  }
+
+  .zoom-info-meta-row {
+    font-size: 1.02rem;
+    line-height: 1.25;
+  }
+}

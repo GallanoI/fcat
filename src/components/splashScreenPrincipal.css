@@ -6,9 +6,6 @@
   align-items: center;
 }
 
-.bg-home {
-  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
-}
 
 .splash-left {
   display: flex;
@@ -47,6 +44,14 @@
   font-weight: 600;
   font-size: 1.6rem;
   z-index: 10;
+  box-sizing: border-box;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+}
+
+.splash-panel span {
+  white-space: normal;
 }
 
 /* === PILARES DECORATIVOS === */
@@ -76,7 +81,7 @@
   background-color: rgba(255, 255, 0, 0.58);
   border: 4px solid #a46e1b;
   color: white;
-  top: 10%;
+  top: 11.6%;
   left: 29%;
 }
 
@@ -84,7 +89,7 @@
   background-color: rgba(0, 176, 240, 0.5);
   border: 4px solid #212121;
   color: white;
-  top: 10%;
+  top: 11.6%;
   left: 47%;
 }
 
@@ -92,7 +97,7 @@
   background-color: rgba(240, 0, 154, 0.5);
   border: 4px solid magenta;
   color: #93c47d;
-  top: 44%;
+  top: 45%;
   left: 29%;
 }
 
@@ -100,7 +105,7 @@
   background-color: rgba(173, 173, 173, 0.4);
   border: 4px solid #212121;
   color: white;
-  top: 44%;
+  top: 45%;
   left: 47%;
 }
 
@@ -113,11 +118,11 @@
 
 .movPilarText-creacion,
 .movPilarText-educacion {
-  font-size: clamp(2rem, 4.2vw, 4rem) !important;
+  font-size: clamp(2.2rem, 4.2vw, 4rem) !important;
 }
 
 .movPilarText-investigacion {
-  font-size: clamp(3rem, 3.8vw, 4rem) !important;
+  font-size: clamp(2.2rem, 3.8vw, 4rem) !important;
 }
 
 .movPilarText-difusion {
@@ -126,7 +131,7 @@
 }
 
 .dif-lines {
-  font-size: clamp(2.5rem, 3.8vw, 4rem);
+  font-size: clamp(2.2rem, 3.8vw, 4rem);
   line-height: 1;
   position: absolute;
   right: -0.8em;
@@ -142,4 +147,64 @@
   color: yellow;
   font-size: clamp(3rem, 6.5vw, 7rem);
   pointer-events: none;
+}
+
+@media (max-width: 800px) {
+  .splash-panel {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 18px 14px;
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .splash-pilar-creacion {
+    top: 6%;
+    left: 10%;
+  }
+
+  .splash-pilar-difusion {
+    top: 24%;
+    left: 52%;
+  }
+
+  .splash-pilar-educacion {
+    top: 44%;
+    left: 10%;
+  }
+
+  .splash-pilar-investigacion {
+    top: 62%;
+    left: 52%;
+  }
+}
+
+@media (max-width: 480px) {
+  .splash-panel {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 14px 10px;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .splash-pilar-creacion {
+    top: 6%;
+    left: 10%;
+  }
+
+  .splash-pilar-difusion {
+    top: 24%;
+    left: 52%;
+  }
+
+  .splash-pilar-educacion {
+    top: 44%;
+    left: 10%;
+  }
+
+  .splash-pilar-investigacion {
+    top: 62%;
+    left: 52%;
+  }
 }

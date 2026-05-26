@@ -1,8 +1,52 @@
 .investigacion-page {
   width: 100vw;
   height: 100vh;
-  background-image: url('../assets/fotos/fondos/investigacion.JPEG');
   background-size: cover;
   background-position: center;
   position: relative;
+}
+
+.c-investigacion {
+  font-size: 2.6rem !important;
+}
+
+.investigacion-page .edu-new-item:hover {
+  background-color: rgba(173, 173, 173, 1) !important;
+  color: black !important;
+}
+
+@media (max-width: 800px) {
+  .investigacion-page .inv-materiales {
+    top: 18% !important;
+    left: 12% !important;
+    width: 190px !important;
+    height: 190px !important;
+    font-size: 2.4rem !important;
+  }
+
+  .investigacion-page .inv-datos {
+    top: 54% !important;
+    left: 58% !important;
+    width: 170px !important;
+    height: 170px !important;
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .investigacion-page .inv-materiales {
+    top: 20% !important;
+    left: 8% !important;
+    width: 150px !important;
+    height: 150px !important;
+    font-size: 1.7rem !important;
+  }
+
+  .investigacion-page .inv-datos {
+    top: 56% !important;
+    left: 48% !important;
+    width: 140px !important;
+    height: 140px !important;
+    font-size: 1.7rem !important;
+  }
 }

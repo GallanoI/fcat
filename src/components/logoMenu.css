@@ -35,7 +35,8 @@
   object-fit: cover;
   border: none;
   transition: transform 0.3s ease;
-  object-position: -46.5px -2px; /*Se debe quedar SI O SI en object-position: -46.5px -2px;*/
+  object-position: 46% 0%;
+  transform-origin: center center;
 }
 
 .logo-back-text {
@@ -82,4 +83,30 @@
 .dropdown-item:hover {
   background-color: #000;
   color: #fff;
+}
+
+@media (max-width: 800px) {
+  .logo-container.logo-vmv {
+    top: 100px;
+    right: 20px;
+    width: 110px;
+  }
+
+  .logo-container.logo-vmv .logo-wrapper {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container.logo-vmv {
+    top: 130px;
+    right: 10px;
+    width: 96px;
+  }
+
+  .logo-container.logo-vmv .logo-wrapper {
+    width: 96px;
+    height: 96px;
+  }
 }

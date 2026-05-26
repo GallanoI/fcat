@@ -10,107 +10,125 @@ const PILARES = {
   investigacion: { color: 'rgba(173, 173, 173, 0.4)', border: '#212121',  text: 'white' },
 };
 
-// quienesData — 8 miembros (actualizar con info real)
 const quienesData = [
   {
     name: 'Carlos',
     role: 'Director',
     info: 'Fundador de FCAT. Gestor cultural y artista visual con trayectoria en el territorio costero.',
-    photo: require('../assets/fotos/quienes/carlos.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/carlos.jpg',
     pilar: 'creacion',
   },
   {
     name: 'Cristal',
     role: 'Coordinación Artística',
     info: 'Artista interdisciplinar enfocada en residencias y gestión de proyectos culturales.',
-    photo: require('../assets/fotos/quienes/cristal.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/cristal.jpg',
     pilar: 'difusion',
   },
   {
     name: 'Ingrid',
     role: 'Educación',
     info: 'Educadora artística a cargo de la Escuela Artística para Niños y programas pedagógicos.',
-    photo: require('../assets/fotos/quienes/ingrid.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/ingrid.jpg',
     pilar: 'educacion',
   },
   {
     name: 'Javier',
     role: 'Investigación',
     info: 'Investigador cultural y documentalista del patrimonio artístico del territorio de Tunquén.',
-    photo: require('../assets/fotos/quienes/javier.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/javier.jpg',
     pilar: 'investigacion',
   },
   {
     name: 'Luz',
     role: 'Comunicaciones',
     info: 'Encargada de comunicaciones, redes y difusión de las actividades de FCAT.',
-    photo: require('../assets/fotos/quienes/luz.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/luz.jpg',
     pilar: 'creacion',
   },
   {
     name: 'Marcos',
     role: 'Producción',
     info: 'Productor ejecutivo de eventos y actividades culturales de la fundación.',
-    photo: require('../assets/fotos/quienes/Marcos.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/Marcos.jpg',
     pilar: 'difusion',
   },
   {
     name: 'Roberto',
     role: 'Tecnología',
     info: 'Responsable de plataformas digitales e infraestructura tecnológica de FCAT.',
-    photo: require('../assets/fotos/quienes/roberto.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/roberto.jpg',
     pilar: 'educacion',
   },
   {
     name: 'Susan',
     role: 'Administración',
     info: 'Encargada de administración y finanzas de la Fundación Cultural Artística de Tunquén.',
-    photo: require('../assets/fotos/quienes/susan.jpg'),
+    photo: process.env.PUBLIC_URL + '/assets/fotos/quienes/susan.jpg',
     pilar: 'investigacion',
   },
 ];
 
-// Posiciones zigzag: col A izquierda, col B derecha, cada col desplazada verticalmente
-const zigzagPositions = [
-  { top: '8%',    left: '6%'  },  // 0 — col A
-  { top: '22%',   left: '56%' },  // 1 — col B
-  { top: '36%',   left: '6%'  },  // 2 — col A
-  { top: '50%',   left: '56%' },  // 3 — col B
-  { top: '64%',   left: '6%'  },  // 4 — col A
-  { top: '78%',   left: '56%' },  // 5 — col B
-  { top: '92%',   left: '6%'  },  // 6 — col A
-  { top: '106%',  left: '56%' },  // 7 — col B
+const zigzagPositionsDesktop = [
+  { top: '6%', left: '6%' },
+  { top: '20%', left: '55%' },
+  { top: '34%', left: '6%' },
+  { top: '48%', left: '55%' },
+  { top: '62%', left: '6%' },
+  { top: '76%', left: '55%' },
+  { top: '90%', left: '6%' },
+  { top: '104%', left: '55%' },
+];
+
+const zigzagPositionsMobile = [
+  { top: '6%', left: '6%' },
+  { top: '18%', left: '55%' },
+  { top: '30%', left: '6%' },
+  { top: '42%', left: '55%' },
+  { top: '54%', left: '6%' },
+  { top: '66%', left: '55%' },
+  { top: '78%', left: '6%' },
+  { top: '90%', left: '55%' },
 ];
 
 const Quienes = () => {
+  const isMobile = window.innerWidth <= 480;
+  const positions = isMobile ? zigzagPositionsMobile : zigzagPositionsDesktop;
+
   return (
     <div className="quienes-page">
       <div className="quienes-header">
         <h1 className="quienes-title">QUIENES SOMOS</h1>
       </div>
-      <div className="quienes-canvas">
-        {quienesData.map((m, i) => {
-          const pilar = PILARES[m.pilar];
-          const pos = zigzagPositions[i];
-          return (
-            <UnQuien
-              key={m.name}
-              name={m.name}
-              role={m.role}
-              info={m.info}
-              photoSrc={m.photo}
-              pilarColor={pilar.color}
-              borderColor={pilar.border}
-              textColor={pilar.text}
-              style={{
-                top: pos.top,
-                left: pos.left,
-                width: 'clamp(160px, 16vw, 220px)',
-                height: 'clamp(160px, 16vw, 220px)',
-              }}
-            />
-          );
-        })}
+
+      <div className="quienes-scroll-panel">
+        <div className="quienes-canvas">
+          {quienesData.map((m, i) => {
+            const pilar = PILARES[m.pilar];
+            const pos = positions[i];
+            const side = i % 2 === 0 ? 'left' : 'right';
+
+            return (
+              <UnQuien
+                key={m.name}
+                name={m.name}
+                role={m.role}
+                info={m.info}
+                photoSrc={m.photo}
+                pilarColor={pilar.color}
+                borderColor={pilar.border}
+                textColor={pilar.text}
+                side={side}
+                style={{
+                  top: pos.top,
+                  left: pos.left,
+                  width: 'clamp(170px, 16vw, 220px)',
+                  height: 'clamp(170px, 16vw, 220px)',
+                }}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

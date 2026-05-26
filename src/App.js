@@ -18,23 +18,31 @@ import EscuelaCine from './pages/escuelaCine';
 import Investigacion from './pages/investigacion';
 import VMV from './pages/vmv';
 import Quienes from './pages/quienes';
+import FichaInscripcion from './pages/fichaInscripcion';
+import Admin from './pages/admin';
 
 function App() {
-  const shouldShowInitialSplash = !sessionStorage.getItem('visited');
+  const location = useLocation();
+
+  const isFormPage = location.pathname === '/inscripcion';
+  const isAdminPage = location.pathname === '/admin';
+
+  const shouldShowInitialSplash = !sessionStorage.getItem('visited') && !isFormPage;
   const [showSplash, setShowSplash] = useState(shouldShowInitialSplash);
   const [splashTrigger, setSplashTrigger] = useState(
     shouldShowInitialSplash ? 'initial-load' : null
   );
   const [isResidenciaSplashVisible, setIsResidenciaSplashVisible] = useState(false);
   const [logoThemeOverride, setLogoThemeOverride] = useState(null);
-  const location = useLocation();
 
   const isResidentProfile =
     location.pathname.startsWith('/creacion/residencia/') &&
     location.pathname.split('/').filter(Boolean).length === 3;
 
   const isLeftLogoView =
-    isResidentProfile || location.pathname.startsWith('/educacion/escuelaninos');
+    isResidentProfile || 
+    location.pathname.startsWith('/educacion/escuelaninos') || 
+    location.pathname.startsWith('/educacion/escuelacine');
 
   useEffect(() => {
     document.title = 'F.C.A.T.';
@@ -59,6 +67,15 @@ function App() {
     setSplashTrigger('menu-inicio');
     setShowSplash(true);
   };
+
+  if (isFormPage || isAdminPage) {
+    return (
+      <Routes>
+        <Route path="/inscripcion" element={<FichaInscripcion />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    );
+  }
 
   return (
     <div className="presentation-bg">
@@ -106,6 +123,7 @@ function App() {
               <Route path="/vmv" element={<VMV />} />
               <Route path="/quienes" element={<Quienes />} />
 
+              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>

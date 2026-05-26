@@ -1,8 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import './splashScreenResidencia.css';
 
 const SplashScreenResidencia = ({ onFinish }) => {
+  const getViewMode = () => {
+    if (typeof window === 'undefined') return 'desktop';
+    if (window.innerWidth <= 800) return 'responsive';
+    return 'desktop';
+  };
+
+  const [viewMode, setViewMode] = useState(getViewMode);
+
+  useEffect(() => {
+    const handleResize = () => setViewMode(getViewMode());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(onFinish, 2500);
     return () => clearTimeout(timer);
@@ -10,25 +24,25 @@ const SplashScreenResidencia = ({ onFinish }) => {
 
   const slides = [
     {
-      src: require('../assets/fotos/fondos/audiovisual.jpg'),
+      src: process.env.PUBLIC_URL + '/assets/fotos/fondos/audiovisual.jpg',
       className: 'col-1',
     },
     {
-      src: require('../assets/fotos/residentes/dafnakojchen/carousel/dk (5).JPEG'),
+      src: process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (5).JPEG',
       className: 'col-2',
     },
     {
-      src: require('../assets/fotos/residentes/kenjisenda/carousel/ks (3).JPEG'),
+      src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (3).JPEG',
       className: 'col-3',
     },
     {
-      src: require('../assets/fotos/residentes/fernandowanders/carousel/fw (15).jpg'),
+      src: process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (15).jpg',
       className: 'col-4',
     },
   ];
 
   return (
-    <div className="splash-residencia">
+    <div className={`splash-residencia ${viewMode === 'responsive' ? 'splash-residencia-responsive' : ''}`}>
       <div className="res-splash-grid">
         {slides.map((item, index) => (
           <div key={index} className={`res-splash-col ${item.className}`}>

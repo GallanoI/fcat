@@ -1,16 +1,26 @@
 {
   "name": "fcat",
   "version": "0.1.0",
-  "description": "Aplicación de escritorio FCAT (Cultura y Arte de Tunquén)",
+  "description": "Aplicación web FCAT (Cultura y Arte de Tunquén)",
   "author": "FCAT",
-  "homepage": "./",
+  "homepage": "/",
   "private": true,
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "better-sqlite3": "^12.10.0",
+    "cors": "^2.8.6",
+    "date-fns": "^4.2.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
     "framer-motion": "^12.34.3",
+    "helmet": "^8.2.0",
+    "multer": "^2.1.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-icons": "^5.6.0",
@@ -19,10 +29,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"node server.js\" \"react-scripts start\"",
+    "start:prod": "node server.js",
+    "stop": "taskkill /F /IM node.exe /T 2>nul & exit 0",
     "build": "react-scripts build",
-    "electron": "npm run build && electron .",
-    "dist": "npm run build && electron-builder",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -44,24 +54,6 @@
     ]
   },
   "devDependencies": {
-    "electron": "^40.8.0",
-    "electron-builder": "^26.8.1"
-  },
-  "build": {
-    "appId": "com.fcat.app",
-    "productName": "FCAT",
-    "directories": {
-      "buildResources": "public"
-    },
-    "files": [
-      "build/**/*",
-      "public/electron.js"
-    ],
-    "win": {
-      "target": "nsis"
-    },
-    "mac": {
-      "target": "dmg"
-    }
+    "concurrently": "^9.2.1"
   }
 }

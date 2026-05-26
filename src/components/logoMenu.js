@@ -7,7 +7,7 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
   const navigate = useNavigate();
   const location = useLocation();
 
-  const options = ["Inicio", "Quienes Somos", "Misión y Visión", "Opcion 3"];
+  const options = ["Inicio", "Quienes Somos", "Misión y Visión", "Administración"];
 
   // Configuración de colores de los pilares
   const pillarConfigs = {
@@ -114,6 +114,8 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
       navigate("/quienes");
     } else if (opt === "Misión y Visión") {
       navigate("/vmv");
+    } else if (opt === "Administración") {
+      navigate("/admin");
     } else {
       navigate(`/${opt.toLowerCase().replace(/ /g, "-")}`);
     }
@@ -138,10 +140,11 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
   };
 
   const isResidentView = residentView || location.pathname.startsWith('/creacion/residencia/');
+  const isVMVPage = location.pathname === '/vmv';
 
   return (
-    <div 
-      className="logo-container"
+    <div
+      className={`logo-container ${isVMVPage ? 'logo-vmv' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={isResidentView ? { left: '40px' } : undefined}

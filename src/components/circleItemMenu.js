@@ -3,6 +3,25 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import './circleItemMenu.css';
 
+const renderCircleText = (content) => {
+  if (
+    content &&
+    typeof content === 'object' &&
+    !Array.isArray(content) &&
+    Object.prototype.hasOwnProperty.call(content, 'line1') &&
+    Object.prototype.hasOwnProperty.call(content, 'line2')
+  ) {
+    return (
+      <span className="circle-hover-text">
+        <span>{content.line1}</span>
+        <span>{content.line2}</span>
+      </span>
+    );
+  }
+
+  return content;
+};
+
 const CircleItemMenu = ({
   title,
   color,
@@ -18,12 +37,18 @@ const CircleItemMenu = ({
   hoverScale = 1.2,
   textColor,
   hoverTextColor,
+  hoverFontSize,
+  hoverStyle = {},
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const baseClass = isSubcategory
     ? 'circle-common subcategory-circle'
     : 'circle-common pilar-main';
+
+  const displayedContent = isHovered
+    ? (hoverTitle || (canShowVolver ? 'Volver al Inicio' : title))
+    : title;
 
   const content = (
     <motion.div
@@ -43,11 +68,11 @@ const CircleItemMenu = ({
         opacity: isHovered ? 1 : 0.85,
         color: isHovered && hoverTextColor ? hoverTextColor : textColor,
         ...style,
+        ...(isHovered && hoverFontSize ? { fontSize: hoverFontSize } : {}),
+        ...(isHovered ? hoverStyle : {}),
       }}
     >
-      {isHovered
-        ? (hoverTitle || (canShowVolver ? 'Volver al Inicio' : title))
-        : title}
+      {renderCircleText(displayedContent)}
     </motion.div>
   );
 

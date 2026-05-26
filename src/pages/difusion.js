@@ -1,18 +1,23 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import CircleItemMenu from '../components/circleItemMenu';
 import Bloqueo from '../components/bloqueo';
+import { downloadFolderContents } from '../components/downloadableItemUtils';
 import './difusion.css';
 
 const Difusion = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const handleDownloadFestivales = () => {
+    downloadFolderContents('Festivales');
+  };
+
   return (
     <div className="difusion-page full-bg">
       <CircleItemMenu
-        className="c-difusion"
+        className="c-difusion dif-tunquen"
         isSubcategory={true}
         to="/difusion/tunquentv"
-        style={{ position: 'absolute', top: '52%', left: '40%', width: '220px', height: '220px' }}
+        style={{ position: 'absolute', top: '52%', left: '40%', width: '230px', height: '230px' }}
         title={
           <div className='tunquenTV'>
             <span className='Tunquen'>Tunquén</span>
@@ -21,10 +26,10 @@ const Difusion = () => {
         }
       />
       <CircleItemMenu
-        className="c-difusion duexprecion-item"
+        className="c-difusion duexprecion-item dif-duexpre"
         isSubcategory={true}
         to="/difusion/expexipreciones"
-        style={{ position: 'absolute', top: '8%', left: '15%', width: '350px', height: '350px' }}
+        style={{ position: 'absolute', top: '5%', left: '10%', width: '350px', height: '350px' }}
         title={
           <div className='duexprecion'>
             <div className='duexpre'>EXPOSI<br />EXIBI<br />PRESENTA</div>
@@ -32,17 +37,29 @@ const Difusion = () => {
           </div>
         }
       />
-      <Bloqueo
-        title={<span className='festivales'>FESTIVALES</span>}
-        className="c-difusion"
-        onUnlock={() => window.open('https://docs.google.com/presentation/d/1UiK1S0mjlGJTcB0hHFR6J-7jFjJ5P_7i/edit?slide=id.p1#slide=id.p1', '_blank', 'noreferrer')}
-        style={{ position: 'absolute', top: '15%', left: '60%', width: '220px', height: '220px' }}
+      <CircleItemMenu
+        title={<span className='artesIntegradas'>AI - ARTES INTEGRADAS</span>}
+        className="c-difusion dif-new-item dif-artes"
+        isSubcategory={true}
+        style={{ position: 'absolute', top: '50%', left: '80%', width: '200px', height: '200px' }}
+        hoverTitle={
+          <span>
+            Proyecto en
+            <br />
+            Desarrollo
+          </span>
+        }
       />
       <Bloqueo
-        title={<span className='artesIntegradas'>AI - ARTES INTEGRADAS</span>}
-        className="c-difusion"
-        onUnlock={() => navigate('/difusion/artesintegradas')}
-        style={{ position: 'absolute', top: '50%', left: '80%', width: '220px', height: '220px' }}
+        title={<span className='festivales'>FESTIVALES</span>}
+        className="c-difusion dif-festivales"
+        hoverTitle={
+          <span style={{ fontSize: '2rem', fontWeight: 300 }}>
+            Descargar<br />Festivales
+          </span>
+        }
+        onUnlock={handleDownloadFestivales}
+        style={{ position: 'absolute', top: '15%', left: '60%', width: '220px', height: '220px' }}
       />
     </div>
   );

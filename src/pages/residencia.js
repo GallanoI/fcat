@@ -5,26 +5,47 @@ import Carousel from '../components/carousel';
 import SplashScreenResidencia from '../components/splashScreenResidencia';
 import CircleItemMenu from '../components/circleItemMenu';
 import Zoom from '../components/zoom';
+import { buildCarouselItemsFromApi } from '../config/carouselMediaUtils';
+import { getCarouselItems } from '../services/db';
 import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
 import './residencia.css';
 
+let residenciaSplashShown = false;
+
 const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(!residenciaSplashShown);
   const [zoomItem, setZoomItem] = useState(null);
   const [activeLogoTheme, setActiveLogoTheme] = useState('creacion');
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
   const pageRef = useRef(null);
   const section1Ref = useRef(null);
   const section2Ref = useRef(null);
+  const section3Ref = useRef(null);
   const section4Ref = useRef(null);
+
+  const isMax800 = viewportWidth <= 800;
+  const isMax480 = viewportWidth <= 480;
+  const residentesVisibleItems = isMax480 ? 1 : isMax800 ? 2 : 3;
+  const materialesVisibleItems = isMax480 ? 1 : isMax800 ? 2 : 3;
+  const RESIDENTES_AUTOPLAY_MS = 5000; // <---- cambiar tiempo autoplay residentes
+  const MATERIALES_AUTOPLAY_MS = 5000; // <---- cambiar tiempo autoplay materiales
   
   const { scrollYProgress } = useScroll({
     container: pageRef,
-    target: section1Ref,
+    target: section2Ref,
     offset: ["start start", "end end"]
   });
 
   const panelY = useTransform(scrollYProgress, [0, 0.5, 1], ['-10px', '-45vh', '-120vh']);
   
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     if (onSplashVisibilityChange) {
       onSplashVisibilityChange(showSplash);
@@ -69,23 +90,36 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
     };
   }, [onSplashVisibilityChange, onLogoThemeChange]);
 
-  const materialesContext = require.context(
-    '../assets/fotos/residencia/materiales',
-    false,
-    /\.(png|jpe?g|webp)$/i
-  );
-  const materiales = materialesContext
-    .keys()
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
-    .map((key) => ({ src: materialesContext(key), type: 'image' }));
+  const [materiales, setMateriales] = useState([]);
+  const [residentes, setResidentes] = useState([]);
 
-  const residentes = [
-    { name: "Ciro Beltrán", src: require('../assets/fotos/residencia/residentes/Ciro.jpg'), textTop: "Ciro", to: "/creacion/residencia/ciro" },
-    { name: "Cristal Jacob", src: require('../assets/fotos/residencia/residentes/Cristal.jpg'), textTop: "Cristal", to: "/creacion/residencia/cristal" },
-    { name: "Kenji Senda", src: require('../assets/fotos/residencia/residentes/Kenji.JPEG'), textTop: "Kenji", to: "/creacion/residencia/kenji" },
-    { name: "Dafna Kojchen", src: require('../assets/fotos/residencia/residentes/Dafna.JPEG'), textTop: "Dafna", to: "/creacion/residencia/dafna" },
-    { name: "Fernando Wanders", src: require('../assets/fotos/residencia/residentes/Fernando.jpeg'), textTop: "Fernando", to: "/creacion/residencia/fernando" },
-  ];
+  useEffect(() => {
+    getCarouselItems('materiales').then((data) => {
+      setMateriales(buildCarouselItemsFromApi(data));
+    });
+  }, []);
+
+  const RESIDENTE_META = {
+    'ciro.jpg':      { name: 'Ciro Beltrán',     textTop: 'Ciro',     to: '/creacion/residencia/ciro' },
+    'cristal.jpg':   { name: 'Cristal Jacob',    textTop: 'Cristal',  to: '/creacion/residencia/cristal' },
+    'kenji.jpeg':    { name: 'Kenji Senda',      textTop: 'Kenji',    to: '/creacion/residencia/kenji' },
+    'dafna.jpeg':    { name: 'Dafna Kojchen',    textTop: 'Dafna',    to: '/creacion/residencia/dafna' },
+    'fernando.jpeg': { name: 'Fernando Wanders', textTop: 'Fernando', to: '/creacion/residencia/fernando' },
+  };
+
+  useEffect(() => {
+    getCarouselItems('residentes').then((data) => {
+      const publicUrl = process.env.PUBLIC_URL || '';
+      setResidentes(
+        data.map((item) => {
+          const filename = item.file_path.split('/').pop().toLowerCase();
+          const meta = RESIDENTE_META[filename] || { name: filename, textTop: filename, to: '/' };
+          return { ...meta, src: publicUrl + item.file_path };
+        })
+      );
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   const texto1 = 'Ubicada en el paisaje silente de Tunquén, la Residencia CAT (Cultura y Arte de Tunquén) es un espacio de investigación y experimentación artística ubicado en un entorno que propicia  el pensamiento y la creación.';
   const texto2 = 'Más que un lugar de producción, CAT es un laboratorio de procesos. Aquí, artistas de distintas disciplinas —artes visuales, danza, teatro— trabajan desde la relación directa con la materia y el territorio. La arcilla, el carbón, las cenizas y el polvo se integran como parte activa de la obra, desplazando lo accesorio para volver a lo fundamental.';
@@ -102,7 +136,7 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
     const target = scrollTargetRef.current;
     if (!target || !pageRef.current) return;
     scrollTargetRef.current = null;
-    const refs = { materiales: section4Ref, residentes: section2Ref };
+    const refs = { materiales: section4Ref, residentes: section3Ref };
     const targetRef = refs[target];
     if (targetRef?.current) {
       setTimeout(() => {
@@ -112,23 +146,27 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
   }, [showSplash]);
 
   if (showSplash) {
-    return <SplashScreenResidencia onFinish={() => setShowSplash(false)} />;
+    return <SplashScreenResidencia onFinish={() => { residenciaSplashShown = true; setShowSplash(false); }} />;
   }
 
   return (
     <div className="residencia-page" ref={pageRef}>
       {/* SECCIÓN 1: PRESENTACIÓN */}
-      <section className="section-16-9 slide-canvas res-bg-1" ref={section1Ref}>
+      <section className="section-16-9 slide-canvas res-bg-1 section-1-cut" ref={section1Ref}>
+        <div className="section-1-bg-layer" aria-hidden="true" />
         <div className="pres-text-1">
-            <h1 style={{ position: 'absolute', top: '21%', left: '8%' }}>RESIDENCIA Y ARTÍSTICA DE TUNQUÉN</h1> 
+          <h1>RESIDENCIA Y ARTÍSTICA DE TUNQUÉN</h1> 
         </div>
         <div className="pres-text-2">
-            <h1 style={{ position: 'absolute', top: '45%', left: '37%' }}>RCAT</h1>
+          <h1>RCAT</h1>
         </div>
-        
+      </section>
+
+      {/* SECCIÓN 2: INFO RESIDENCIA */}
+      <section className="section-16-9 slide-canvas res-info-section" ref={section2Ref}>
         <motion.div
           className="ascending-container"
-          style={{ y: panelY, zIndex: 3000}}
+          style={{ y: isMax800 ? 0 : panelY, zIndex: 3000 }}
         >
           <div className="ascending-panel">
             <div className="left-col">
@@ -169,40 +207,41 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
         </motion.div>
       </section>
 
-      {/* SECCIÓN 2: RESIDENTES */}
-      <section className="section-16-9 slide-canvas" ref={section2Ref} style={{ backgroundImage: `url(${require('../assets/fotos/residencia/res2.JPEG')})` }}>
+      {/* SECCIÓN 3: RESIDENTES */}
+      <section className="section-16-9 slide-canvas" ref={section3Ref} style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/assets/fotos/residencia/res2.JPEG)` }}>
         <div className="residentes-title">
           <h2>RESIDENTES CAT</h2>
         </div>
-        <div style={{ position: 'absolute', bottom: '10%', width: '100%' }}>
+        <div className="residentes-carousel-wrap">
           <Carousel
             items={residentes}
             type="residentes"
             variant="named"
             captionPosition="top"
-            visibleItems={3}
+            visibleItems={residentesVisibleItems}
+            autoPlayInterval={RESIDENTES_AUTOPLAY_MS}
             className="residentes-carousel"
             onImageClick={(item) => navigate(item.to)}
           />
         </div>
       </section>
 
-      {/* SECCIÓN 3: RESIDENCIA */}
+      {/* SECCIÓN 4: RESIDENCIA */}
       <section className="section-16-9 res-section-2">
         <div className="res-grid-container">
           <div className="column-left">
-            <img src={require('../assets/fotos/residencia/res2.JPEG')} alt="Interior Residencia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={process.env.PUBLIC_URL + '/assets/fotos/residencia/res2.JPEG'} alt="Interior Residencia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div className="column-right">
             <div className="quote-container">
               <p className="quote-text">" Donde la tierra se hace pensamiento..."</p>
             </div>
-            <img src={require('../assets/fotos/residencia/res3.jpg')} alt="Detalle Residencia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={process.env.PUBLIC_URL + '/assets/fotos/residencia/res3.jpg'} alt="Detalle Residencia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
       </section>
 
-      {/* SECCIÓN 4: MATERIALES */}
+      {/* SECCIÓN 5: MATERIALES */}
       <section className="section-16-9 slide-canvas materiales-section" ref={section4Ref}>
         <h2 className="materiales-title">MATERIALES</h2>
 
@@ -225,7 +264,8 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
           <Carousel
             items={materiales}
             variant="gallery"
-            visibleItems={3}
+            visibleItems={materialesVisibleItems}
+            autoPlayInterval={MATERIALES_AUTOPLAY_MS}
             showText={false}
             className="materiales-carousel"
             backgroundColor="rgba(173, 173, 173, 0.4)"

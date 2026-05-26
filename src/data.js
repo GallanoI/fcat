@@ -1,37 +1,118 @@
-const naturalSort = (a, b) =>
-  a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+import { buildStaticCarouselItems } from './config/carouselMediaUtils';
 
-const getMediaType = (filePath) =>
-  /\.(mp4|webm|ogg)$/i.test(filePath) ? 'video' : 'image';
+const loadMedia = (paths) => buildStaticCarouselItems(paths);
 
-const loadMedia = (context) =>
-  context
-    .keys()
-    .sort(naturalSort)
-    .map((key) => ({
-      src: context(key),
-      type: getMediaType(key),
-    }));
+const createPlaceholderZoomInfo = (items = []) =>
+  items.map((_, index) => ({
+    nombre: `Obra ${index + 1}`,
+    materiales: 'Por definir',
+    resena: 'Por definir',
+  }));
 
-const cristalCarousel = loadMedia(
-  require.context('./assets/fotos/residentes/cristaljacob/carousel', false, /\.(png|jpe?g|webp|mp4)$/i)
-);
+const cristalCarousel = loadMedia([
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (1).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (2).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (3).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (4).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (5).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (6).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (7).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (8).JPG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (9).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (10).JPG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (11).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (12).mp4',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (13).jpeg',
+]);
 
-const ciroCarousel = loadMedia(
-  require.context('./assets/fotos/residentes/cirobeltran/carousel', false, /\.(png|jpe?g|webp|mp4)$/i)
-);
+const ciroCarousel = loadMedia([
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/cirobeltran/carousel/YelowYuyo.mp4',
+]);
 
-const kenjiCarousel = loadMedia(
-  require.context('./assets/fotos/residentes/kenjisenda/carousel', false, /\.(png|jpe?g|webp|mp4)$/i)
-);
+const kenjiCarousel = loadMedia([
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (1).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (1).JPG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (2).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (3).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (4).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (5).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (6).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (7).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (8).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (9).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (10).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (11).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (12).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (13).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (14).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (15).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (16).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (17).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (18).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (19).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (20).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (21).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (22).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (23).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (24).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (25).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (26).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (27).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (28).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (29).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (30).JPEG',
+]);
 
-const dafnaCarousel = loadMedia(
-  require.context('./assets/fotos/residentes/dafnakojchen/carousel', false, /\.(png|jpe?g|webp|mp4)$/i)
-);
+const dafnaCarousel = loadMedia([
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (1).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (2).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (3).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (4).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (5).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (6).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (7).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (8).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (9).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (10).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (11).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (12).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (13).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (14).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (15).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (16).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (17).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (18).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (19).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (20).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (21).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (22).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (23).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (24).JPEG',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (25).JPEG',
+]);
 
-const fernandoCarousel = loadMedia(
-  require.context('./assets/fotos/residentes/fernandowanders/carousel', false, /\.(png|jpe?g|webp|mp4)$/i)
-);
+const fernandoCarousel = loadMedia([
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (1).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (2).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (3).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (4).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (5).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (6).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (7).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (8).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (9).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (10).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (11).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (12).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (13).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (14).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (15).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (16).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (17).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (18).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (19).jpg',
+  process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (20).jpg',
+]);
 
 export const residentesData = {
   cristal: {
@@ -40,21 +121,21 @@ export const residentesData = {
       {
         type: 'text',
         content:
-          'Cristal Jacob es una artista visual cuya práctica se define por una curiosidad insaciable y una búsqueda transdisciplinar que desafía los límites de los soportes tradicionales. A lo largo de su trayectoria, ha configurado un cuerpo de obra diverso donde la performance y el videoarte no son solo medios, sino lenguajes para interpelar la realidad. Su trabajo ha transitado por las profundidades de la pintura y la escultura, siempre impulsada por un deseo de desentrañar los mecanismos internos de la imagen y la forma.',
+          'Cristal Jacob , artista visual cuya práctica se enmarca en una curiosidad insaciable y una búsqueda transdisciplinar que desafía los límites de los soportes tradicionales. A lo largo de su trayectoria, ha configurado un cuerpo de obra diverso donde la performance y el videoarte no son solo medios, sino lenguajes para interpelar la realidad. Su trabajo ha transitado por las aristas de la pintura y la escultura, siempre impulsada por un deseo de entender y aplicar los mecanismos internos de la imagen y la forma.',
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/cristaljacob/carousel/cj (1).jpg'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (1).jpg',
         alt: 'Cristal Jacob - Obra 1',
       },
       {
         type: 'text',
         content:
-          'Sin embargo, el hito más transformador de su carrera se produjo hace una década, cuando decidió hacer de Tunquén su hogar y su centro de operaciones. Durante estos últimos diez años, Cristal ha habitado el territorio como una investigadora de lo invisible, descubriendo en el paisaje costero una riqueza de materialidades que han redefinido su estética. No solo observa el entorno; lo vive, lo respira y lo traduce. De esta convivencia íntima con la luz, el viento y la geología del lugar, surge su fascinación por los elementos que hoy definen el pulso de su trabajo: la transformación de la materia en su estado más puro.',
+          'El hito más transformador de su carrera se produjo hace una década, cuando decidió hacer de Tunquén su hogar y su centro de operaciones. Durante estos últimos diez años, ha habitado el territorio como una investigadora de lo invisible, descubriendo en el paisaje costero una riqueza de materialidades que han redefinido su estética. No solo observa el entorno; lo vive, lo respira y lo traduce. De esta convivencia íntima con la luz, el viento y la geografía del lugar, surge su fascinación por los elementos que hoy definen el pulso de su trabajo; La transformación de la materia desde su estado más puro.',
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/cristaljacob/carousel/cj (2).jpg'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (2).jpg',
         alt: 'Cristal Jacob - Obra 2',
       },
       {
@@ -64,7 +145,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/cristaljacob/carousel/cj (3).jpg'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cristaljacob/carousel/cj (3).jpg',
         alt: 'Cristal Jacob - Obra 3',
       },
       {
@@ -74,6 +155,7 @@ export const residentesData = {
       },
     ],
     carousel: cristalCarousel,
+    zoomInfo: createPlaceholderZoomInfo(cristalCarousel),
   },
 
   ciro: {
@@ -86,7 +168,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/cirobeltran/cb.jpg'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cirobeltran/cb.jpg',
         alt: 'Ciro Beltrán - Obra',
       },
       {
@@ -99,10 +181,20 @@ export const residentesData = {
       ? ciroCarousel
       : [
           {
-            src: require('./assets/fotos/residentes/cirobeltran/cb.jpg'),
+            src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cirobeltran/cb.jpg',
             type: 'image',
           },
         ],
+    zoomInfo: createPlaceholderZoomInfo(
+      ciroCarousel.length
+        ? ciroCarousel
+        : [
+            {
+              src: process.env.PUBLIC_URL + '/assets/fotos/residentes/cirobeltran/cb.jpg',
+              type: 'image',
+            },
+          ]
+    ),
   },
 
   kenji: {
@@ -115,7 +207,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (1).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (1).JPEG',
         alt: 'Kenji Senda - Obra 1',
       },
       {
@@ -125,7 +217,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (2).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (2).JPEG',
         alt: 'Kenji Senda - Obra 2',
       },
       {
@@ -135,7 +227,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (3).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (3).JPEG',
         alt: 'Kenji Senda - Obra 3',
       },
       {
@@ -145,7 +237,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (4).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (4).JPEG',
         alt: 'Kenji Senda - Obra 4',
       },
       {
@@ -155,7 +247,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (5).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (5).JPEG',
         alt: 'Kenji Senda - Obra 5',
       },
       {
@@ -165,11 +257,12 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/kenjisenda/carousel/ks (6).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/kenjisenda/carousel/ks (6).JPEG',
         alt: 'Kenji Senda - Obra 6',
       },
     ],
     carousel: kenjiCarousel,
+    zoomInfo: createPlaceholderZoomInfo(kenjiCarousel),
   },
 
   dafna: {
@@ -182,7 +275,7 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/dafnakojchen/carousel/dk (1).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (1).JPEG',
         alt: 'Dafna Kojchen - Fotografía 1',
       },
       {
@@ -192,21 +285,22 @@ export const residentesData = {
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/dafnakojchen/carousel/dk (2).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (2).JPEG',
         alt: 'Dafna Kojchen - Fotografía 2',
       },
       {
         type: 'text',
         content:
-          'Más que documentar un territorio, su trabajo propone una forma de conciencia. Cada fotografía es un acto de observación profunda, donde lo aparentemente cotidiano revela su dimensión cósmica. Tunquén aparece así no solo como un lugar geográfico, sino como un espacio de conexión entre lo humano y lo infinito.\n\nSu obra nos invita a detenernos, a mirar con atención y a comprender que la expansión del universo no ocurre únicamente en la distancia astronómica, sino también en cada pliegue de la naturaleza que habitamos.',
+          'Más que documentar un territorio, su trabajo propone una forma de conciencia. Cada fotografía es un acto de observación profunda, donde lo aparentemente cotidiano revela su dimensión cósmica. Tunquén aparece así no solo como un lugar geográfico, sino como un espacio de conexión entre lo humano y lo infinito. Su obra nos invita a detenernos, a mirar con atención y a comprender que la expansión del universo no ocurre únicamente en la distancia astronómica, sino también en cada pliegue de la naturaleza que habitamos.',
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/dafnakojchen/carousel/dk (3).JPEG'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/dafnakojchen/carousel/dk (3).JPEG',
         alt: 'Dafna Kojchen - Fotografía 3',
       },
     ],
     carousel: dafnaCarousel,
+    zoomInfo: createPlaceholderZoomInfo(dafnaCarousel),
   },
 
   fernando: {
@@ -215,24 +309,25 @@ export const residentesData = {
       {
         type: 'text',
         content:
-          'La mirada de Fernando Wanders se sitúa en el umbral donde la fotografía deja de ser un mero registro para convertirse en un acto de justicia territorial. Su trabajo se articula desde el respeto profundo por el entorno, entendiendo la imagen como una herramienta de rescate y permanencia en un mundo que a menudo olvida observar lo que pisa. Wanders no solo captura paisajes; habita el territorio para desenterrar las narrativas silenciosas que yacen en la superficie de la tierra.',
+          'La mirada de Fernando se sitúa en el umbral donde la fotografía deja de ser un mero registro para convertirse en un acto de justicia territorial. Su trabajo se articula desde el respeto profundo por el entorno, entendiendo la imagen como una herramienta de rescate y permanencia en un mundo que a menudo olvida observar lo que pisa. Fernando no solo captura paisajes; habita el territorio para desentrñar las narrativas silenciosas que yacen en la superficie de la tierra.',
       },
       {
         type: 'image',
-        src: require('./assets/fotos/residentes/fernandowanders/carousel/fw (1).jpg'),
+        src: process.env.PUBLIC_URL + '/assets/fotos/residentes/fernandowanders/carousel/fw (1).jpg',
         alt: 'Fernando Wanders - Fotografía',
       },
       {
         type: 'text',
         content:
-          'Durante su paso por la Residencia CAT, el fotógrafo ha volcado su atención hacia la micro-ecología de la quebrada, sumergiéndose en la penumbra húmeda para rescatar la profunda delicadeza de los hongos del bosque. En este ejercicio de paciencia y atención plena, Wanders logra visibilizar lo imperceptible: esas formas de vida esenciales que suelen pasar inadvertidas ante la falta de atención de cada paso humano. Su lente actúa como un microscopio emocional, devolviéndole la importancia a lo pequeño y revelando la arquitectura frágil que sostiene el equilibrio del ecosistema.',
+          'Durante su paso por la Residencia CAT, ha volcado su atención hacia la micro-ecología de la quebrada, sumergiéndose en la penumbra húmeda para rescatar la profunda delicadeza de los hongos del bosque. En este ejercicio de paciencia y atención plena, él logra visibilizar lo imperceptible: esas formas de vida esenciales que suelen pasar inadvertidas ante la falta de atención de cada paso humano. Su lente actúa como un microscopio emocional, devolviéndole la importancia a lo pequeño y revelando la arquitectura frágil que sostiene el equilibrio del ecosistema.',
       },
       {
         type: 'text',
         content:
-          'Fernando Wanders se posiciona así como un descubridor de lo inmediato, un cronista que nos recuerda que la riqueza del territorio no está solo en el horizonte, sino en el detalle mínimo. Al igual que el carbón y la ceniza en el trabajo de sus pares, sus fotografías son rastros de una realidad latente que nos rodea, invitándonos a detener la marcha y reconocer, por fin, la complejidad y el misterio de lo que habitamos.',
+          'Así ,Fernando Wanders se posiciona como un descubridor de lo inmediato, un cronista que nos recuerda que la riqueza del territorio no está solo en el horizonte, sino en el detalle mínimo. Sus fotografías son rastros de una realidad latente que nos rodea, invitándonos a detener la marcha y reconocer, por fin, la complejidad y el misterio de lo que habitamos.',
       }
     ],
     carousel: fernandoCarousel,
+    zoomInfo: createPlaceholderZoomInfo(fernandoCarousel),
   },
 };

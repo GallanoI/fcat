@@ -1,0 +1,407 @@
+/* ─── Variables ──────────────────────────────────────────────────────────── */
+:root {
+  --ficha-rojo: rgba(255, 0, 0, 1);
+  --ficha-rojo-hover: rgba(200, 0, 0, 1);
+  --ficha-font: 'Oswald', sans-serif;
+  --ficha-radius: 8px;
+  --ficha-border: 1px solid #ddd;
+}
+
+/* ─── Fondo rojo ─────────────────────────────────────────────────────────── */
+.ficha-bg {
+  min-height: 100vh;
+  background: var(--ficha-rojo);
+  padding: 40px 64px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  font-family: var(--ficha-font);
+}
+
+/* ─── Contenedor blanco centrado ─────────────────────────────────────────── */
+.ficha-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 48px 52px;
+  box-sizing: border-box;
+}
+
+/* ─── Título principal ───────────────────────────────────────────────────── */
+.ficha-title {
+  font-family: var(--ficha-font);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ficha-rojo);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 32px;
+  text-align: center;
+}
+
+/* ─── Secciones ──────────────────────────────────────────────────────────── */
+.ficha-section {
+  border-top: 2px solid #f0f0f0;
+  padding-top: 24px;
+  margin-bottom: 24px;
+}
+
+.ficha-section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.ficha-section-title {
+  font-family: var(--ficha-font);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 18px;
+}
+
+/* ─── Grid de campos ─────────────────────────────────────────────────────── */
+.ficha-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+
+.ficha-field--full {
+  grid-column: 1 / -1;
+}
+
+/* ─── Etiquetas e inputs ─────────────────────────────────────────────────── */
+.ficha-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ficha-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ficha-label-hint {
+  font-size: 0.7rem;
+  font-weight: 400;
+  text-transform: none;
+  color: #888;
+}
+
+.ficha-input {
+  font-family: var(--ficha-font);
+  font-size: 0.95rem;
+  padding: 9px 12px;
+  border: var(--ficha-border);
+  border-radius: var(--ficha-radius);
+  outline: none;
+  transition: border-color 0.18s;
+  background: #fafafa;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ficha-input:focus {
+  border-color: var(--ficha-rojo);
+  background: #fff;
+}
+
+.ficha-input--error {
+  border-color: var(--ficha-rojo);
+}
+
+.ficha-select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.ficha-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* ─── Mensajes de error ──────────────────────────────────────────────────── */
+.ficha-error {
+  font-size: 0.72rem;
+  color: var(--ficha-rojo);
+  font-weight: 600;
+}
+
+.ficha-error-global {
+  background: rgba(255, 0, 0, 0.07);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: var(--ficha-rojo-hover);
+  border-radius: var(--ficha-radius);
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+/* ─── Selector cantidad niños ────────────────────────────────────────────── */
+.ficha-cantidad {
+  margin-top: 20px;
+}
+
+.ficha-cantidad-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.ficha-cantidad-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: #fafafa;
+  font-family: var(--ficha-font);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  color: #555;
+}
+
+.ficha-cantidad-btn:hover {
+  border-color: var(--ficha-rojo);
+  color: var(--ficha-rojo);
+}
+
+.ficha-cantidad-btn.active {
+  background: var(--ficha-rojo);
+  border-color: var(--ficha-rojo);
+  color: #fff;
+}
+
+/* ─── Checkboxes días de asistencia ─────────────────────────────────────── */
+.ficha-dias {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.ficha-dia-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.ficha-dia-item input[type='checkbox'] {
+  accent-color: var(--ficha-rojo);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.ficha-dia-label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.ficha-dia-fecha-tachada {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.ficha-sin-cupos {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(180, 0, 0, 1);
+  margin-left: 4px;
+}
+
+.ficha-todos-label {
+  font-weight: bold;
+}
+
+/* ─── Términos y condiciones ─────────────────────────────────────────────── */
+.ficha-terminos {
+  border-top: 2px solid #f0f0f0;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ficha-terminos-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.ficha-terminos-label input[type='checkbox'] {
+  accent-color: var(--ficha-rojo);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.ficha-terminos-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--ficha-rojo);
+  font-family: var(--ficha-font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ficha-terminos-link:hover {
+  color: var(--ficha-rojo-hover);
+}
+
+/* ─── Botón Inscribir ────────────────────────────────────────────────────── */
+.ficha-submit {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: var(--ficha-rojo);
+  color: #fff;
+  font-family: var(--ficha-font);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--ficha-radius);
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease;
+  margin-top: 8px;
+}
+
+.ficha-submit:hover:not(:disabled) {
+  background: var(--ficha-rojo-hover);
+  transform: scale(1.01);
+}
+
+.ficha-submit:disabled {
+  background: #c5c5c5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Modal de confirmación ──────────────────────────────────────────────── */
+.ficha-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.ficha-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 52px 44px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.ficha-modal-title {
+  font-family: var(--ficha-font);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ficha-rojo);
+  margin: 0 0 16px;
+  text-transform: uppercase;
+}
+
+.ficha-modal-text {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+.ficha-modal-btn {
+  display: inline-block;
+  padding: 13px 28px;
+  background: var(--ficha-rojo);
+  color: #fff;
+  font-family: var(--ficha-font);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--ficha-radius);
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.ficha-modal-btn:hover {
+  background: var(--ficha-rojo-hover);
+}
+
+/* ─── Modal resultados (inscripción parcial) ────────────────────────── */
+.ficha-modal-resultados {
+  width: 100%;
+  text-align: left;
+  margin: 12px 0;
+}
+.ficha-modal-nino {
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+.ficha-modal-nino strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.ficha-modal-taller-row {
+  padding-left: 12px;
+  margin-bottom: 2px;
+}
+.ficha-modal-taller-name {
+  font-weight: 500;
+}
+.ficha-modal-dia-ok {
+  color: #4caf50;
+}
+.ficha-modal-dia-sin-cupo {
+  color: rgba(255, 0, 0, 1);
+}
+.ficha-modal-aviso {
+  font-size: 0.82rem;
+  color: #888;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .ficha-bg {
+    padding: 20px 16px;
+  }
+  .ficha-container {
+    padding: 28px 20px;
+  }
+  .ficha-grid {
+    grid-template-columns: 1fr;
+  }
+  .ficha-field--full {
+    grid-column: 1;
+  }
+}

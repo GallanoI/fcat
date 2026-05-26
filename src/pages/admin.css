@@ -1,0 +1,501 @@
+/* ── Admin Page ─────────────────────────────────────────────────────────── */
+
+.adm-login-page,
+.adm-dashboard {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  font-family: 'Oswald', sans-serif;
+}
+
+.adm-login-overlay,
+.adm-dashboard-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+/* ── Login box ─────────────────────────────────────────────────────────── */
+.adm-login-box {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(20, 20, 20, 0.92);
+  border: 2px solid rgba(255, 0, 0, 0.8);
+  border-radius: 16px;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-width: 340px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  z-index: 10;
+}
+
+.adm-login-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.adm-login-close:hover {
+  background: rgba(255, 0, 0, 1);
+  color: #fff;
+}
+
+.adm-login-title {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.adm-login-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,0,0,0.5);
+  border-radius: 8px;
+  background: #2a2a2a;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.adm-login-input:focus { border-color: rgba(255,0,0,1); }
+
+.adm-login-error {
+  margin: 0;
+  color: #ff5555;
+  font-size: 0.9rem;
+}
+
+.adm-login-locked {
+  margin: 0;
+  color: #ff9900;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.adm-login-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,0,0,1);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.adm-login-btn:hover { opacity: 0.85; }
+
+/* ── Dashboard columns ─────────────────────────────────────────────────── */
+.adm-logout-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  z-index: 20;
+  background: rgba(255,0,0,0.85);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.adm-logout-btn:hover { opacity: 0.8; }
+
+.adm-columns {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  height: 100%;
+}
+
+.adm-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.adm-col:hover {
+  background: rgba(255,0,0,0.18);
+}
+
+.adm-col-label {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  padding: 24px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 12px;
+  background: rgba(0,0,0,0.35);
+  transition: background 0.2s;
+}
+
+.adm-col:hover .adm-col-label {
+  background: rgba(255,0,0,0.25);
+  border-color: rgba(255,0,0,0.7);
+}
+
+/* ── Overlay panel (slide-down) ─────────────────────────────────────────── */
+.adm-panel-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  background: rgba(10, 10, 10, 0.96);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.adm-volver-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin: 16px 20px;
+  background: transparent;
+  color: rgba(255,0,0,1);
+  border: 1px solid rgba(255,0,0,0.6);
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.adm-volver-btn:hover { background: rgba(255,0,0,0.15); }
+
+.adm-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 28px 28px;
+}
+
+/* ── Shared panel styles ────────────────────────────────────────────────── */
+.adm-section-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 20px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255,0,0,0.4);
+  padding-bottom: 10px;
+}
+
+.adm-loading {
+  color: #aaa;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 60px;
+}
+
+/* ── DB Info panel ──────────────────────────────────────────────────────── */
+.adm-dbinfo { color: #fff; }
+
+.adm-db-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.adm-db-tab {
+  padding: 8px 18px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.adm-db-tab.active,
+.adm-db-tab:hover {
+  background: rgba(255,0,0,0.25);
+  border-color: rgba(255,0,0,0.6);
+  color: #fff;
+}
+
+.adm-db-tallerista {
+  color: #aaa;
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+}
+
+.adm-db-table-wrap { overflow-x: auto; }
+
+.adm-db-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.adm-db-table th {
+  background: rgba(255,0,0,0.3);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.adm-db-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: #ddd;
+  vertical-align: top;
+}
+
+.adm-db-table tr:hover td { background: rgba(255,255,255,0.04); }
+
+.adm-db-dias {
+  font-size: 0.78rem;
+  color: #aaa;
+  max-width: 200px;
+  word-break: break-all;
+}
+
+/* ── Carousel manager ───────────────────────────────────────────────────── */
+.adm-carousel-manager { color: #fff; }
+
+.adm-picker-section { margin-bottom: 28px; }
+
+.adm-picker-title {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #aaa;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.adm-pillars { display: flex; flex-direction: column; gap: 8px; }
+
+.adm-pillar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.adm-pillar-label {
+  min-width: 110px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.adm-pillar-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.adm-carousel-btn {
+  padding: 7px 14px;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-carousel-btn:hover { background: rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.6); }
+
+.adm-carousel-btn.active {
+  background: rgba(255,0,0,0.5);
+  border-color: rgba(255,0,0,0.9);
+}
+
+.adm-carousel-btn:disabled { opacity: 0.4; cursor: default; }
+
+.adm-item-count {
+  font-size: 0.78rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+/* ── Modifier section ───────────────────────────────────────────────────── */
+.adm-modifier-section {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 20px;
+}
+
+.adm-modifier-title {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ccc;
+  margin: 0 0 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.adm-carousel-name {
+  color: rgba(255,0,0,0.9);
+  text-transform: none;
+}
+
+.adm-add-area {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.adm-file-input {
+  color: #ccc;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+}
+
+.adm-pending-info { margin: 0; color: #aaa; font-size: 0.9rem; }
+
+/* ── Thumbnails grid ────────────────────────────────────────────────────── */
+.adm-thumbs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.adm-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #222;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.adm-thumb--selected { border-color: rgba(255, 0, 0, 0.9); }
+
+.adm-thumb-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.adm-thumb-check {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+.adm-thumb-check--on {
+  background: rgba(255,0,0,0.85);
+  border-color: #fff;
+}
+
+/* ── Actions bar ────────────────────────────────────────────────────────── */
+.adm-msg {
+  margin: 0 0 10px;
+  color: #8df;
+  font-size: 0.9rem;
+}
+
+.adm-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adm-actions-left { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.adm-action-btn {
+  padding: 9px 18px;
+  background: rgba(255,255,255,0.08);
+  color: #ddd;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 7px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.adm-action-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+.adm-action-btn--active {
+  background: rgba(255,0,0,0.3);
+  border-color: rgba(255,0,0,0.7);
+  color: #fff;
+}
+
+.adm-apply-btn {
+  padding: 10px 28px;
+  background: rgba(255,0,0,1);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.adm-apply-btn:hover { opacity: 0.85; }
+.adm-apply-btn:disabled { opacity: 0.4; cursor: default; }

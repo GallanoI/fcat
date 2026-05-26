@@ -10,13 +10,13 @@ const AppHome = () => {
         color="rgba(255,255,0,0.58)"
         to="/creacion"
         className="c-creacion"
-        style={{ top: '2%', left: '29%' }}
+        style={{ top: '4%', left: '29%' }}
       />
       <CircleItemMenu
         color="rgba(0,176,240,0.5)"
         to="/difusion"
         className="c-difusion"
-        style={{ top: '2%', left: '47%' }}
+        style={{ top: '4%', left: '47%' }}
         title={
           <div className="dif-title">
             <div className="dif-lines">Eventos<br />Difusión</div>

@@ -1,9 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Carousel from '../components/carousel';
-import Zoom from '../components/zoom';
+import ZoomInfo from '../components/zoomInfo';
 import { residentesData } from '../data';
 import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
+import { buildCarouselItemsFromApi } from '../config/carouselMediaUtils';
+import { getCarouselItems } from '../services/db';
 import './perfilResidente.css';
 
 const PerfilResidente = () => {
@@ -11,15 +13,23 @@ const PerfilResidente = () => {
   const data = residentesData[id];
   const [zoomIndex, setZoomIndex] = useState(null);
 
-  const carouselImages = useMemo(() => {
-    if (!data) return [];
-    return data.carousel || [];
-  }, [data]);
+  const [carouselImages, setCarouselImages] = useState([]);
+
+  useEffect(() => {
+    getCarouselItems(id).then((data) => {
+      setCarouselImages(buildCarouselItemsFromApi(data));
+    });
+  }, [id]);
 
   const sections = useMemo(() => {
     if (!data) return [];
     return data.sections || [];
   }, [data]);
+
+  const zoomMetadata = useMemo(() => {
+    if (!data || zoomIndex === null) return null;
+    return data.zoomInfo?.[zoomIndex] || null;
+  }, [data, zoomIndex]);
 
   if (!data) {
     return <div className="resident-error">Residente no encontrado</div>;
@@ -69,8 +79,10 @@ const PerfilResidente = () => {
       </div>
 
       {zoomIndex !== null && (
-        <Zoom
+        <ZoomInfo
           item={carouselImages[zoomIndex]}
+          info={zoomMetadata}
+          residentName={data.nombre}
           onClose={() => setZoomIndex(null)}
           overlayColor={ZOOM_OVERLAY_COLORS.residentes}
         />

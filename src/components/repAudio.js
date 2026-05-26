@@ -9,21 +9,33 @@ const RepAudio = ({
   borderColor = '#000',
   className = '',
   hidden = false,
+  onPlayStart,
+  onPlayStop,
+  onPlayComplete,
 }) => {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const onPlayStopRef = useRef(onPlayStop);
+  onPlayStopRef.current = onPlayStop;
 
   useEffect(() => {
+    const currentAudio = audioRef.current;
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (currentAudio) {
+        if (!currentAudio.paused) {
+          onPlayStopRef.current?.();
+        }
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
       }
     };
   }, []);
 
   useEffect(() => {
     if (audioRef.current) {
+      if (!audioRef.current.paused) {
+        onPlayStopRef.current?.();
+      }
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
@@ -39,10 +51,16 @@ const RepAudio = ({
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
+      onPlayStop?.();
       return;
     }
 
-    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    audioRef.current.play()
+      .then(() => {
+        setIsPlaying(true);
+        onPlayStart?.();
+      })
+      .catch(() => {});
   };
 
   if (hidden) {
@@ -65,7 +83,10 @@ const RepAudio = ({
       <audio
         ref={audioRef}
         src={src}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={() => {
+          setIsPlaying(false);
+          onPlayComplete?.();
+        }}
       />
       <span className="rep-audio-notes" aria-hidden="true">
         <FaMusic />

@@ -1,7 +1,6 @@
 .audiovisual-page {
   width: 100vw;
   height: 100vh;
-  background-image: url('../assets/fotos/fondos/audiovisual.jpg');
   background-size: cover;
   background-position: center;
   position: relative;
@@ -14,4 +13,155 @@
 
 .audiovisual-page .metamorfosis-item:hover {
   color: white !important;
+  -webkit-text-stroke: 1px black;
+}
+
+.audiovisual-page .aud-new-item:hover {
+  color: white !important;
+  -webkit-text-stroke: 1px black;
+}
+
+.audiovisual-page .pd-new-item:hover {
+  background-color: rgb(255, 251, 0) !important;
+  color: white !important;
+  -webkit-text-stroke: 1px black;
+}
+
+.audiovisual-page .grandes-maestras-item {
+  color: black !important;
+}
+
+.audiovisual-page .grandes-maestras-item:hover {
+  color: white !important;
+  -webkit-text-stroke: 1px black;
+}
+
+@media (max-width: 800px) {
+  .audiovisual-page {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  /* metamorfosis */
+  .audiovisual-page > :nth-child(1) {
+    top: 6% !important;
+    left: 8% !important;
+    width: 180px !important;
+    height: 180px !important;
+    font-size: 1.5rem !important;
+    line-height: 1.15 !important;
+  }
+  /* Grandes Maestras Chile */
+  .audiovisual-page > :nth-child(2) {
+    top: 19% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1.1rem !important;
+    line-height: 1.12 !important;
+  }
+  /* Si algun dia desaparezco */
+  .audiovisual-page > :nth-child(3) {
+    top: 39% !important;
+    left: 8% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1.1rem !important;
+    line-height: 1.12 !important;
+  }
+  /* Guardianes de la Oscuridad */
+  .audiovisual-page > :nth-child(4) {
+    top: 44% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1.1rem !important;
+    line-height: 1.12 !important;
+  }
+  /* Isla Mocha */
+  .audiovisual-page > :nth-child(5) {
+    top: 65% !important;
+    left: 8% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1.1rem !important;
+    line-height: 1.12 !important;
+  }
+  /* La Yegua */
+  .audiovisual-page > :nth-child(6) {
+    top: 69% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1.1rem !important;
+    line-height: 1.12 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .audiovisual-page {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* metamorfosis */
+  .audiovisual-page > :nth-child(1) {
+    top: 5% !important;
+    left: 8% !important;
+    width: 180px !important;
+    height: 180px !important;
+    font-size: 1.35rem !important;
+    line-height: 1.12 !important;
+  }
+  /* Grandes Maestras Chile */
+  .audiovisual-page > :nth-child(2) {
+    top: 26% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+  /* Si algun dia desaparezco */
+  .audiovisual-page > :nth-child(3) {
+    top: 36% !important;
+    left: 8% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+  /* Guardianes de la Oscuridad */
+  .audiovisual-page > :nth-child(4) {
+    top: 50% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+  /* Isla Mocha */
+  .audiovisual-page > :nth-child(5) {
+    top: 60% !important;
+    left: 8% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+  /* La Yegua */
+  .audiovisual-page > :nth-child(6) {
+    top: 74% !important;
+    left: 52% !important;
+    width: 130px !important;
+    height: 130px !important;
+    font-size: 1rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .audiovisual-page > :nth-child(2):hover,
+  .audiovisual-page > :nth-child(5):hover,
+  .audiovisual-page > :nth-child(6):hover{
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+  }
 }

@@ -1,12 +1,12 @@
 .quienes-page {
   width: 100vw;
-  min-height: 100vh;
-  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
+  height: 100vh;
   background-size: cover;
   background-position: center;
   position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .quienes-header {
@@ -19,6 +19,7 @@
   box-sizing: border-box;
   z-index: 100;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .quienes-title {
@@ -31,12 +32,93 @@
   -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
 }
 
-/* Canvas con posicionamiento absoluto para el zigzag */
+.quienes-scroll-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .quienes-canvas {
   position: relative;
   width: 100%;
-  /* Altura suficiente para los 8 círculos en zigzag
-     El último círculo está a top 106% + circle-height ~16vw ≈ 16% => total ~122% */
-  height: calc(106% + clamp(160px, 16vw, 220px) + 40px);
-  min-height: 800px;
+  height: 1200px;
+  min-height: 1200px;
+  padding: 56px 0 72px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .quienes-header {
+    padding: 12px 20px;
+  }
+
+  .quienes-title {
+    font-size: clamp(1.4rem, 4vw, 2.3rem);
+    letter-spacing: 0.08em;
+  }
+
+  .quienes-canvas {
+    height: 1400px;
+    min-height: 1400px;
+    padding: 70px 0 90px;
+  }
+
+  .quienes-canvas .unquien-entry {
+    --unquien-circle-width: 135px !important;
+    --unquien-circle-height: 135px !important;
+    --unquien-panel-width: 210px !important;
+    gap: 12px;
+  }
+
+  .quienes-canvas .unquien-entry.is-left {
+    left: 4% !important;
+  }
+
+  .quienes-canvas .unquien-entry.is-right {
+    left: auto !important;
+    right: 4% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .quienes-header {
+    padding: 10px 14px;
+  }
+
+  .quienes-title {
+    font-size: clamp(1.2rem, 5.5vw, 1.7rem);
+    letter-spacing: 0.06em;
+  }
+
+  .quienes-canvas {
+    height: 1500px;
+    min-height: 1500px;
+    padding: 120px 0 90px;
+  }
+
+  .quienes-canvas .unquien-entry {
+    --unquien-circle-width: 105px !important;
+    --unquien-circle-height: 105px !important;
+    --unquien-panel-width: 200px !important;
+    gap: 10px;
+  }
+
+  .quienes-canvas .unquien-entry.is-left {
+    left: 3% !important;
+  }
+
+  .quienes-canvas .unquien-entry.is-right {
+    left: auto !important;
+    right: 3% !important;
+  }
+
+  .quienes-canvas .unquien-name {
+    font-size: 0.95rem;
+  }
+
+  .quienes-canvas .unquien-info-text {
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
 }

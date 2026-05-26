@@ -1,154 +1,224 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ActiveMediaPanel from '../components/activeMediaPanel';
 import Carousel from '../components/carousel';
-import DuTextColFond from '../components/duTextColFond';
 import RepAudio from '../components/repAudio';
 import Zoom from '../components/zoom';
+import { buildCarouselItemsFromApi } from '../config/carouselMediaUtils';
+import { getCarouselItems } from '../services/db';
 import { ZOOM_OVERLAY_COLORS } from '../config/zoomThemes';
 import './expExiPreciones.css';
+
+const backgroundImage = process.env.PUBLIC_URL + '/assets/fotos/fondos/duexpre.JPG';
+const expSidePic = process.env.PUBLIC_URL + '/assets/fotos/duexpre/sidePic/IMG_8460.PNG';
+const expSidePic2 = process.env.PUBLIC_URL + '/assets/fotos/duexpre/sidePic/IMG_8461.jpg';
+
+const AUDIO_BY_NAME = {
+  'paularoberto.wav': process.env.PUBLIC_URL + '/assets/audios/PaulaRoberto.wav',
+};
+
+
+const TITLE_LEFT = (
+  <span>
+    EXPOSI
+    <br />
+    EXIBI
+    <br />
+    PRESENTA
+  </span>
+);
+
+const TITLE_RIGHT = (
+  <span>
+    CIO
+    <br />
+    NES
+  </span>
+);
 
 const ExpExiPreciones = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [zoomItem, setZoomItem] = useState(null);
+  const [isAudioAutoplayHold, setIsAudioAutoplayHold] = useState(false);
+  const resumeTimeoutRef = useRef(null);
+  const [duexpreItems, setDuexpreItems] = useState([]);
 
-  const duexpreContext = require.context(
-    '../assets/fotos/duexpre',
-    false,
-    /\.JPG$/i
-  );
-
-  const audiosContext = require.context(
-    '../assets/audios',
-    false,
-    /\.(mp3|wav|ogg)$/i
-  );
-
-  const audioByName = useMemo(() => {
-    const map = {};
-    audiosContext.keys().forEach((key) => {
-      const fileName = key.replace('./', '').toLowerCase();
-      map[fileName] = audiosContext(key);
+  useEffect(() => {
+    getCarouselItems('expExiPreciones').then((data) => {
+      setDuexpreItems(
+        buildCarouselItemsFromApi(data, (dbItem, idx) => {
+          const si = dbItem.side_image;
+          const sideImage = si === 'sidePic1' ? expSidePic : si === 'sidePic2' ? expSidePic2 : null;
+          return {
+            name: `dexp-${idx + 1}`,
+            leftText: sideImage ? '' : dbItem.left_text || ' ',
+            sideImage,
+            rightText: dbItem.right_text || '',
+            audio: dbItem.audio_file ? AUDIO_BY_NAME[dbItem.audio_file.toLowerCase()] : null,
+          };
+        })
+      );
     });
-    return map;
-  }, [audiosContext]);
+  }, []);
 
-  // Datos de cada foto: leftText, rightText, audioFile
-  // idx es 0-based, pero los comentarios usan 1-based para claridad
-  const photoData = useMemo(() => ({
-    
-    // 0: { leftText: 'AAAAAAAAAAAAAAAAAAAAAAAA', rightText: 'GUSTAVO LOPEZ', audioFile: 'audio1.mp3' },
-    // 1: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: 'audio1.mp3' },
-    // 2: { leftText: 'CAJON FLAMENCO', rightText: 'MARCELO SOLAR', audioFile: 'audio54.mp3' },
-    // 3: { leftText: 'DANZA AFGANA', rightText: 'GRETA BELIMOVA', audioFile: null },
-    // Agrega aquí los datos de las fotos 5-75 siguiendo el mismo formato
-    // Ejemplo para más fotos:
-    // 4: { leftText: 'TEXTO IZQUIERDO FOTO 5', rightText: 'TEXTO DERECHO FOTO 5', audioFile: 'audio66.mp3' },
-    6: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
-    7: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
-    17: { leftText: ' ', rightText: 'PAULA REPETTO', audioFile: null },
-    
-    
-    31: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
-    32: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
-    33: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
-    34: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
-    35: { leftText: 'MÚSICA FLAMENCA', rightText: 'GUSTAVO LOPEZ', audioFile: null },
-    
-    40: { leftText: 'CAJON FLAMENCO', rightText: 'MARCELO SOLAR', audioFile: null },
 
-    52: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
-    53: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
-    54: { leftText: 'CONCIERTO PARA FLAUTA Y PIANO', rightText: 'ROBERTO ORELLANA', audioFile: null },
-  }), []);
+  const clearResumeTimeout = () => {
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = null;
+    }
+  };
 
-  const duexpreItems = useMemo(
-    () => duexpreContext
-      .keys()
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
-      .map((key, idx) => {
-        const data = photoData[idx] || {};
-        return {
-          src: duexpreContext(key),
-          type: 'image',
-          name: `dexp-${idx + 1}`,
-          leftText: data.leftText || '', //`Texto foto ${idx}`,
-          rightText: data.rightText || '',
-          audio: data.audioFile ? audioByName[data.audioFile.toLowerCase()] : null,
-        };
-      }),
-    [duexpreContext, audioByName, photoData]
-  );
+  const scheduleAutoplayResume = () => {
+    clearResumeTimeout();
+    setIsAudioAutoplayHold(false);
+  };
+
+  const handleAudioStart = () => {
+    clearResumeTimeout();
+    setIsAudioAutoplayHold(true);
+  };
+
+  const handleAudioStop = () => {
+    scheduleAutoplayResume();
+  };
+
+  const handleAudioComplete = () => {
+    scheduleAutoplayResume();
+  };
+
+  useEffect(() => {
+    return () => {
+      clearResumeTimeout();
+      setIsAudioAutoplayHold(false);
+    };
+  }, []);
+
+  const getViewMode = () => {
+    if (typeof window === 'undefined') return 'desktop';
+    if (window.innerWidth <= 480) return 'phone';
+    if (window.innerWidth <= 800) return 'tablet';
+    return 'desktop';
+  };
+
+  const [viewMode, setViewMode] = useState(getViewMode);
+
+  useEffect(() => {
+    const handleResize = () => setViewMode(getViewMode());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const safeIndex = Math.max(0, Math.min(selectedIndex, duexpreItems.length - 1));
   const activeItem = duexpreItems[safeIndex] || null;
+  const isDesktop = viewMode === 'desktop';
+  const responsiveModeClass = viewMode === 'phone' ? 'exp-responsive-stage-480' : 'exp-responsive-stage-800';
 
   return (
-    <div
-      className="exp-page"
-      style={{ backgroundImage: `url(${require('../assets/fotos/fondos/duexpre.JPG')})` }}
-    >
-      <DuTextColFond
-        className="exp-layout"
-        leftTitleClassName="exp-left-title"
-        rightTitleClassName="exp-right-title"
-        rightBackground="rgba(8, 84, 184, 0.5)"
-        leftTitle={
-          <span>
-            EXPOSI
-            <br />
-            EXIBI
-            <br />
-            PRESENTA
-          </span>
-        }
-        rightTitle={
-          <span>
-            CIO
-            <br />
-            NES
-          </span>
-        }
-        leftTitleColor="#f1c232"
-        rightTitleColor="#93c47d"
-        leftContent={
-          <div className="exp-left-content">
-            <p className="exp-left-changing-text">{activeItem?.leftText}</p>
-          </div>
-        }
-        rightContent={
-          <div className="exp-right-content">
-            {/* Ajuste manual vertical: modifica --exp-feature-y en .exp-right-content */}
-            <div className="exp-feature-wrap" style={{ '--exp-feature-y': '50%' }}>
-              <p className="exp-right-overlay-text">{activeItem?.rightText}</p>
-              <img
-                src={activeItem?.src}
-                alt="Obra actual"
-                className="exp-feature-img"
-                onClick={() => activeItem && setZoomItem(activeItem)}
+    <div className="exp-page" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <div className="exp-layout">
+        <div className="exp-cols">
+          <section className="exp-col exp-col-left">
+            {isDesktop && (
+              activeItem?.sideImage ? (
+                <div className="exp-left-side-pic-wrap">
+                  <img src={activeItem.sideImage} alt="Imagen lateral" className="exp-left-side-pic" />
+                </div>
+              ) : (
+                <p className="exp-left-changing-text">{activeItem?.leftText}</p>
+              )
+            )}
+          </section>
+
+          <section className="exp-col exp-col-right" style={{ backgroundColor: 'rgba(8, 84, 184, 0.5)' }}>
+            {isDesktop && (
+              <div className="exp-feature-wrap">
+                <p className="exp-right-overlay-text">{activeItem?.rightText}</p>
+                <ActiveMediaPanel
+                  item={activeItem}
+                  alt="Obra actual"
+                  className="exp-feature-panel"
+                  onClick={() => activeItem && setZoomItem(activeItem)}
+                />
+                <RepAudio
+                  className="exp-audio-btn"
+                  src={activeItem?.audio}
+                  hidden={!activeItem?.audio}
+                  size={80}
+                  onPlayStart={handleAudioStart}
+                  onPlayStop={handleAudioStop}
+                  onPlayComplete={handleAudioComplete}
+                />
+              </div>
+            )}
+          </section>
+        </div>
+
+        <div className="exp-title-overlay">
+          <h2 className="exp-col-title exp-left-title exp-overlay-left-title" style={{ color: '#f1c232' }}>
+            {TITLE_LEFT}
+          </h2>
+          <h2 className="exp-col-title exp-right-title exp-overlay-right-title" style={{ color: '#93c47d' }}>
+            {TITLE_RIGHT}
+          </h2>
+        </div>
+
+        {!isDesktop && (
+          <div className={`exp-responsive-stage ${responsiveModeClass}`}>
+            <div className="exp-responsive-carousel-shell">
+              <div className="exp-responsive-right-text">{activeItem?.rightText}</div>
+              <Carousel
+                items={duexpreItems}
+                variant="gallery"
+                visibleItems={1}
+                showText={false}
+                autoPlayInterval={7000}
+                className="exp-duexpre-carousel exp-duexpre-carousel-responsive"
+                backgroundColor="rgba(8, 84, 184, 0.5)"
+                onIndexChange={setSelectedIndex}
+                onImageClick={(item, idx) => setZoomItem(duexpreItems[idx])}
+                isPaused={isAudioAutoplayHold || !!zoomItem}
               />
+            </div>
+
+            <div className="exp-responsive-lower">
+              {activeItem?.sideImage ? (
+                <div className="exp-responsive-side-pic-wrap">
+                  <img src={activeItem.sideImage} alt="Imagen lateral" className="exp-responsive-side-pic" />
+                </div>
+              ) : (
+                <p className="exp-responsive-left-text">{activeItem?.leftText}</p>
+              )}
+
               <RepAudio
-                className="exp-audio-btn"
+                className="exp-responsive-audio"
                 src={activeItem?.audio}
                 hidden={!activeItem?.audio}
                 size={80}
+                onPlayStart={handleAudioStart}
+                onPlayStop={handleAudioStop}
+                onPlayComplete={handleAudioComplete}
               />
             </div>
           </div>
-        }
-      />
-
-      <div className="exp-carousel-wrap">
-        <Carousel
-          items={duexpreItems}
-          variant="gallery"
-          visibleItems={4}
-          showText={false}
-          autoPlayInterval={7000}
-          className="exp-duexpre-carousel"
-          backgroundColor="rgba(8, 84, 184, 0.5)"
-          onIndexChange={setSelectedIndex}
-          onImageClick={(item, idx) => setSelectedIndex(idx)}
-        />
+        )}
       </div>
+
+      {isDesktop && (
+        <div className="exp-carousel-wrap">
+          <Carousel
+            items={duexpreItems}
+            variant="gallery"
+            visibleItems={4}
+            showText={false}
+            autoPlayInterval={7000}
+            className="exp-duexpre-carousel"
+            backgroundColor="rgba(8, 84, 184, 0.5)"
+            onIndexChange={setSelectedIndex}
+            onImageClick={(item, idx) => setSelectedIndex(idx)}
+            isPaused={isAudioAutoplayHold}
+          />
+        </div>
+      )}
 
       <Zoom
         item={zoomItem}

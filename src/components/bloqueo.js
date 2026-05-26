@@ -1,24 +1,41 @@
 import React, { useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { FaLock } from 'react-icons/fa';
 import './bloqueo.css';
 
 const LOCKOUT_DURATION = 600000; // 10 minutos
 
-/**
- * Bloqueo — círculo bloqueado con contraseña.
- * Props:
- *   title       — contenido JSX / texto del círculo
- *   className   — clases CSS adicionales (ej. "c-difusion festivales")
- *   style       — estilos inline (position, top, left, width, height, etc.)
- *   password    — contraseña requerida (string)
- *   onUnlock    — callback ejecutado al ingresar la contraseña correcta
- */
+const renderHoverText = (content) => {
+  if (
+    content &&
+    typeof content === 'object' &&
+    !Array.isArray(content) &&
+    Object.prototype.hasOwnProperty.call(content, 'line1') &&
+    Object.prototype.hasOwnProperty.call(content, 'line2')
+  ) {
+    return (
+      <span className="bloqueo-hover-label is-custom">
+        <span>{content.line1}</span>
+        <span>{content.line2}</span>
+      </span>
+    );
+  }
+
+  return <span className="bloqueo-hover-label">{content}</span>;
+};
+
 const Bloqueo = ({
   title,
   className = '',
   style = {},
-  password = 'fcat2025',
+  password = '1982',
   onUnlock,
+  hoverTitle,
+  hoverScale = 1.2,
+  textColor,
+  hoverTextColor,
+  hoverFontSize,
+  hoverStyle = {},
 }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -67,6 +84,10 @@ const Bloqueo = ({
           ...style,
           opacity: isLocked ? 0.5 : isHovered ? 1 : 0.85,
           cursor: isLocked ? 'not-allowed' : 'pointer',
+          color: isHovered && hoverTextColor ? hoverTextColor : textColor,
+          transform: isHovered && !isLocked ? `scale(${hoverScale})` : 'scale(1)',
+          ...(isHovered && hoverFontSize ? { fontSize: hoverFontSize } : {}),
+          ...(isHovered ? hoverStyle : {}),
         }}
         onClick={handleCircleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -74,8 +95,14 @@ const Bloqueo = ({
       >
         {isHovered && !isLocked ? (
           <div className="bloqueo-hover-content">
-            <FaLock className="bloqueo-lock-icon-top" />
-            <span className="bloqueo-hover-label">Acceso Restringido</span>
+            {hoverTitle ? (
+              renderHoverText(hoverTitle)
+            ) : (
+              <>
+                <FaLock className="bloqueo-lock-icon-top" />
+                <span className="bloqueo-hover-label">Acceso Restringido</span>
+              </>
+            )}
           </div>
         ) : isLocked ? (
           <div className="bloqueo-hover-content">
@@ -90,7 +117,7 @@ const Bloqueo = ({
         )}
       </div>
 
-      {showPopup && (
+      {showPopup && ReactDOM.createPortal(
         <div className="bloqueo-backdrop" onClick={() => setShowPopup(false)}>
           <div className="bloqueo-popup" onClick={(e) => e.stopPropagation()}>
             <FaLock className="bloqueo-popup-icon" />
@@ -118,7 +145,8 @@ const Bloqueo = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

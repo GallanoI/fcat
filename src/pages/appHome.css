@@ -3,9 +3,6 @@
   height: 100vh;
 }
 
-.bg-home {
-  background-image: url('../assets/fotos/fondos/imagen-fondo-home.JPEG');
-}
 
 .app-home-page .c-creacion,
 .app-home-page .c-educacion,
@@ -16,11 +13,11 @@
 
 .app-home-page .c-creacion,
 .app-home-page .c-educacion {
-  font-size: clamp(2rem, 4.2vw, 4rem) !important;
+  font-size: clamp(2.2rem, 4.2vw, 4rem) !important;
 }
 
 .app-home-page .c-investigacion {
-  font-size: clamp(3rem, 3.8vw, 4rem) !important;
+  font-size: clamp(2.2rem, 3.8vw, 4rem) !important;
 }
 
 .dif-title {
@@ -29,12 +26,13 @@
 }
 
 .dif-lines {
-  font-size: clamp(2.5rem, 3.8vw, 4rem);
+  font-size: clamp(2.2rem, 3.8vw, 4rem);
   line-height: 1;
   position: absolute;
   right: -0.8em;
   top: 50%;
   transform: translateY(-50%);
+  text-align: left;
 }
 
 .dif-amp {
@@ -45,4 +43,48 @@
   color: yellow;
   font-size: clamp(3rem, 6.5vw, 7rem);
   pointer-events: none;
+}
+
+@media (max-width: 800px) {
+  .app-home-page .c-creacion {
+    top: 6% !important;
+    left: 10% !important;
+  }
+
+  .app-home-page .c-difusion {
+    top: 24% !important;
+    left: 52% !important;
+  }
+
+  .app-home-page .c-educacion {
+    top: 44% !important;
+    left: 10% !important;
+  }
+
+  .app-home-page .c-investigacion {
+    top: 62% !important;
+    left: 52% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-home-page .c-creacion {
+    top: 6% !important;
+    left: 10% !important;
+  }
+
+  .app-home-page .c-difusion {
+    top: 24% !important;
+    left: 52% !important;
+  }
+
+  .app-home-page .c-educacion {
+    top: 44% !important;
+    left: 10% !important;
+  }
+
+  .app-home-page .c-investigacion {
+    top: 62% !important;
+    left: 52% !important;
+  }
 }

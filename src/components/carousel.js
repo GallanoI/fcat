@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import './carousel.css';
 import { useZoomPause } from '../config/zoomPauseContext';
+import { orderCarouselItems } from '../config/carouselMediaUtils';
 
 export const createNamedCarouselProps = (captionPosition = 'top') => ({
   variant: 'named',
@@ -25,6 +26,7 @@ const Carousel = ({
   backgroundColor,
   className = '',
   onIndexChange,
+  isPaused = false,
 }) => {
   // const [index, setIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -37,12 +39,12 @@ const Carousel = ({
   const trackRef = useRef(null);
   const viewportRef = useRef(null);
   const autoPlayTimerRef = useRef(null);
+  const prevTotalItemsRef = useRef(-1);
+  const prevCloneCountRef = useRef(-1);
   const { isZoomActive } = useZoomPause();
 
-  const normalizedItems = useMemo(() => {
-  return Array.isArray(items) ? items : [];
-}, [items]);
-  const totalItems = normalizedItems.length; // .length || 1;
+  const normalizedItems = useMemo(() => orderCarouselItems(items), [items]);
+  const totalItems = normalizedItems.length;
 
   const mode = variant || (showText && type === 'residentes' ? 'named' : 'gallery');
   const isNamedMode = mode === 'named';
@@ -84,11 +86,29 @@ const Carousel = ({
   const totalOffsetPercent = baseOffsetPercent + dragOffset;
 
   useEffect(() => {
-    if (totalItems > 0) {
+    const prevTotalItems = prevTotalItemsRef.current;
+    const prevCloneCount = prevCloneCountRef.current;
+
+    prevTotalItemsRef.current = totalItems;
+    prevCloneCountRef.current = cloneCount;
+
+    if (totalItems <= 0) {
+      setTrackIndex(0);
+      return;
+    }
+
+    if (prevTotalItems !== totalItems) {
+      // Los ítems cambiaron — reset al inicio
       setEnableTransition(false);
       setTrackIndex(cloneCount);
-    } else {
-      setTrackIndex(0);
+    } else if (prevCloneCount !== cloneCount && prevCloneCount >= 0) {
+      // Solo cambió visibleItems — mantener el displayIndex actual
+      setEnableTransition(false);
+      setTrackIndex((currentTrack) => {
+        const oldDisplayIndex =
+          ((currentTrack - prevCloneCount) % totalItems + totalItems) % totalItems;
+        return cloneCount + oldDisplayIndex;
+      });
     }
   }, [totalItems, cloneCount]);
 
@@ -102,33 +122,72 @@ const Carousel = ({
 
 
   const handleNext = useCallback(() => {
-  if (totalItems <= 1) return;
-  setTrackIndex((prev) => prev + 1);
-  setDragOffset(0);
-}, [totalItems]);
+    if (totalItems <= 1) return;
+    setTrackIndex((prev) => prev + 1);
+    setDragOffset(0);
+  }, [totalItems]);
 
-const handlePrev = useCallback(() => {
-  if (totalItems <= 1) return;
-  setTrackIndex((prev) => prev - 1);
-  setDragOffset(0);
-}, [totalItems]);
+  const handlePrev = useCallback(() => {
+    if (totalItems <= 1) return;
+    setTrackIndex((prev) => prev - 1);
+    setDragOffset(0);
+  }, [totalItems]);
 
-  // Resetear autoplay cuando cambia el index
-  useEffect(() => {
-    if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
-    if (!isZoomActive && totalItems > 1) {
-      autoPlayTimerRef.current = setInterval(handleNext, autoPlayInterval);
+  const clearAutoPlayTimer = useCallback(() => {
+    if (autoPlayTimerRef.current) {
+      clearTimeout(autoPlayTimerRef.current);
+      autoPlayTimerRef.current = null;
     }
+  }, []);
+
+  const scheduleAutoAdvance = useCallback(
+    (delay = autoPlayInterval) => {
+      clearAutoPlayTimer();
+
+      if (isZoomActive || isPaused || totalItems <= 1) {
+        return;
+      }
+
+      autoPlayTimerRef.current = setTimeout(() => {
+        handleNext();
+      }, delay);
+    },
+    [autoPlayInterval, clearAutoPlayTimer, handleNext, isPaused, isZoomActive, totalItems]
+  );
+
+  const activeItem = totalItems > 0 ? normalizedItems[displayIndex] : null;
+  const activeItemIsVideo = activeItem?.type === 'video';
+
+  useEffect(() => {
+    clearAutoPlayTimer();
+
+    if (totalItems <= 1 || isZoomActive || isPaused) {
+      return undefined;
+    }
+
+    if (!activeItemIsVideo) {
+      scheduleAutoAdvance(autoPlayInterval);
+    }
+
     return () => {
-      if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
+      clearAutoPlayTimer();
     };
-  }, [handleNext, autoPlayInterval, totalItems, isZoomActive]);
+  }, [
+    activeItemIsVideo,
+    autoPlayInterval,
+    clearAutoPlayTimer,
+    displayIndex,
+    isPaused,
+    isZoomActive,
+    scheduleAutoAdvance,
+    totalItems,
+  ]);
 
   const handleMouseDown = (e) => {
     if (!viewportRef.current || totalItems <= 1) return;
     setIsDragging(true);
     setDragStart(e.clientX);
-    if (autoPlayTimerRef.current) clearInterval(autoPlayTimerRef.current);
+    clearAutoPlayTimer();
   };
 
   const handleMouseMove = (e) => {
@@ -157,8 +216,8 @@ const handlePrev = useCallback(() => {
     setTrackIndex(newTrackIndex);
     setDragOffset(0);
 
-    if (!isZoomActive && totalItems > 1) {
-      autoPlayTimerRef.current = setInterval(handleNext, autoPlayInterval);
+    if (newTrackIndex === trackIndex && !activeItemIsVideo) {
+      scheduleAutoAdvance(autoPlayInterval);
     }
   };
 
@@ -217,7 +276,7 @@ const handlePrev = useCallback(() => {
         <button 
           className="arrow-char arrow-left" 
           onClick={handlePrev}
-          title="Foto anterior"
+          title="Anterior"
         >
           &lt;
         </button>
@@ -257,7 +316,35 @@ const handlePrev = useCallback(() => {
 
                 <div className="img-grid-container">
                   {item.type === 'video' ? (
-                    <video src={item.src} className="carousel-img" muted loop playsInline autoPlay />
+                    <video
+                      key={`${item.src}-${item.__realIndex === displayIndex ? 'active' : 'idle'}`}
+                      src={item.src}
+                      className="carousel-img"
+                      muted
+                      playsInline
+                      autoPlay={item.__realIndex === displayIndex}
+                      loop={false}
+                      preload="metadata"
+                      onLoadedMetadata={(event) => {
+                        if (item.__realIndex !== displayIndex) {
+                          event.currentTarget.pause();
+                          event.currentTarget.currentTime = 0;
+                          return;
+                        }
+
+                        const playPromise = event.currentTarget.play();
+                        if (playPromise?.catch) {
+                          playPromise.catch(() => {
+                            scheduleAutoAdvance(autoPlayInterval);
+                          });
+                        }
+                      }}
+                      onEnded={() => {
+                        if (item.__realIndex === displayIndex) {
+                          scheduleAutoAdvance(autoPlayInterval);
+                        }
+                      }}
+                    />
                   ) : (
                     <img src={item.src} alt={item.name} className="carousel-img" />
                   )}
@@ -279,7 +366,7 @@ const handlePrev = useCallback(() => {
         <button 
           className="arrow-char arrow-right" 
           onClick={handleNext}
-          title="Foto siguiente"
+          title="Siguiente"
         >
           &gt;
         </button>

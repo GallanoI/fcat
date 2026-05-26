@@ -11,6 +11,25 @@
 # production
 /build
 
+# base de datos local
+/data
+
+# logs y archivos temporales
+/logs
+/temp_uploads
+
+# variables de entorno (contienen credenciales)
+.env
+
+# archivos de media pesados (>100MB) — subir al VPS por SFTP
+public/assets/audios/PaulaRoberto.wav
+public/assets/fotos/escuelaCine/carousel/esCi (4).MOV
+public/assets/fotos/escuelaCine/carousel/esCi (5).MOV
+public/assets/fotos/escuelaCine/carousel/esCi (6).MOV
+public/assets/fotos/escuelaCine/carousel/esCi (7).MOV
+public/assets/fotos/escuelaCine/carousel/esCi (88).MOV
+public/assets/fotos/escuelaCine/carousel/esCi (89).mp4
+
 # misc
 .DS_Store
 .env.local
@@ -21,3 +40,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+debug.log

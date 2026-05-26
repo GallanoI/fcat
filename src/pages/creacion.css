@@ -1,9 +1,44 @@
 .creacion-page {
   width: 100vw;
   height: 100vh;
-  background-image: url('../assets/fotos/fondos/creacion.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
+}
+
+@media (max-width: 800px) {
+  .creacion-page .creacion-residencias {
+    top: 18% !important;
+    left: 12% !important;
+    width: 190px !important;
+    height: 190px !important;
+    font-size: 2rem !important;
+  }
+
+  .creacion-page .creacion-audiovisual {
+    top: 54% !important;
+    left: 58% !important;
+    width: 170px !important;
+    height: 170px !important;
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .creacion-page .creacion-residencias {
+    top: 20% !important;
+    left: 8% !important;
+    width: 150px !important;
+    height: 150px !important;
+    font-size: 1.7rem !important;
+  }
+
+  .creacion-page .creacion-audiovisual {
+    top: 56% !important;
+    left: 48% !important;
+    width: 140px !important;
+    height: 140px !important;
+    font-size: 1.7rem !important;
+  }
 }
