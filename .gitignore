@@ -21,14 +21,8 @@
 # variables de entorno (contienen credenciales)
 .env
 
-# archivos de media pesados (>100MB) — subir al VPS por SFTP
-public/assets/audios/PaulaRoberto.wav
-public/assets/fotos/escuelaCine/carousel/esCi (4).MOV
-public/assets/fotos/escuelaCine/carousel/esCi (5).MOV
-public/assets/fotos/escuelaCine/carousel/esCi (6).MOV
-public/assets/fotos/escuelaCine/carousel/esCi (7).MOV
-public/assets/fotos/escuelaCine/carousel/esCi (88).MOV
-public/assets/fotos/escuelaCine/carousel/esCi (89).mp4
+# archivos de media pesados (>100MB)
+# ninguno actualmente — PaulaRoberto convertido a .mp3, videos esCi no son parte del proyecto
 
 # misc
 .DS_Store

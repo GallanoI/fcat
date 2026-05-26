@@ -13,7 +13,7 @@ const expSidePic = process.env.PUBLIC_URL + '/assets/fotos/duexpre/sidePic/IMG_8
 const expSidePic2 = process.env.PUBLIC_URL + '/assets/fotos/duexpre/sidePic/IMG_8461.jpg';
 
 const AUDIO_BY_NAME = {
-  'paularoberto.wav': process.env.PUBLIC_URL + '/assets/audios/PaulaRoberto.wav',
+  'paularoberto.mp3': process.env.PUBLIC_URL + '/assets/audios/PaulaRoberto.mp3',
 };
 
 

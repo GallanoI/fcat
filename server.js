@@ -121,7 +121,7 @@ const DUEXPRE_META = {
   34: { left_text: 'MÚSICA FLAMENCA', right_text: 'GUSTAVO LOPEZ' },
   39: { left_text: 'CAJON FLAMENCO',  right_text: 'MARCELO SOLAR' },
   48: { left_text: 'CONCIERTO PARA FLAUTA Y PIANO', right_text: 'ROBERTO ORELLANA' },
-  49: { left_text: 'CONCIERTO PARA FLAUTA Y PIANO', right_text: 'ROBERTO ORELLANA y PAULA REPETTO', audio_file: 'PaulaRoberto.wav' },
+  49: { left_text: 'CONCIERTO PARA FLAUTA Y PIANO', right_text: 'ROBERTO ORELLANA y PAULA REPETTO', audio_file: 'PaulaRoberto.mp3' },
   50: { left_text: 'CONCIERTO PARA FLAUTA Y PIANO', right_text: 'ROBERTO ORELLANA y PAULA REPETTO' },
   68: { left_text: 'DANZA AFGANA', right_text: 'GRETA BELIMOVA' },
   69: { left_text: 'DANZA AFGANA', right_text: 'GRETA BELIMOVA' },
