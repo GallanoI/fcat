@@ -701,7 +701,7 @@ app.put('/api/admin/carousel-item/:itemId/metadata', adminAuth, (req, res) => {
 const buildDir = path.join(__dirname, 'build');
 if (fs.existsSync(buildDir)) {
   app.use(express.static(buildDir));
-  app.get('*', (req, res) => {
+  app.get('/{*splat}', (req, res) => {
     res.sendFile(path.join(buildDir, 'index.html'));
   });
 }
