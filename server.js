@@ -303,13 +303,15 @@ function initDatabase() {
     const ins = db.prepare(
       'INSERT INTO Taller (nombre_taller, nombre_tallerista, fecha1, fecha2) VALUES (?, ?, ?, ?)'
     );
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       ins.run('Música',      'Cristian López',   '2026-06-22 09:00:00', '2026-06-29 09:00:00');
       ins.run('Stop Motion', 'Gonzalo Beltrán',  '2026-06-23 09:00:00', '2026-06-30 09:00:00');
       ins.run('Escultura',   'Eduardo Nova',     '2026-06-24 09:00:00', '2026-07-01 09:00:00');
       ins.run('Cerámica',    'Françoise Tixier', '2026-06-25 09:00:00', '2026-07-02 09:00:00');
       ins.run('Grabado',     'Felipe Araya',     '2026-06-26 09:00:00', '2026-07-03 09:00:00');
-    })();
+      db.exec('COMMIT');
+    } catch (e) { db.exec('ROLLBACK'); throw e; }
   }
 
   // Seed carruseles
@@ -318,15 +320,19 @@ function initDatabase() {
     const insC = db.prepare(
       'INSERT INTO Carousel (nombre, carpeta, prefijo, ext_default) VALUES (?, ?, ?, ?)'
     );
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       for (const c of CAROUSEL_SEEDS) insC.run(c.nombre, c.carpeta, c.prefijo, c.ext_default);
-    })();
+      db.exec('COMMIT');
+    } catch (e) { db.exec('ROLLBACK'); throw e; }
   }
 
   // Migrar items de carrusel desde disco si la tabla está vacía
   const { cnt: itemCnt } = db.prepare('SELECT COUNT(*) AS cnt FROM CarouselItem').get();
   if (itemCnt === 0) {
-    db.transaction(() => migrateCarouselItems(db))();
+    db.exec('BEGIN');
+    try { migrateCarouselItems(db); db.exec('COMMIT'); }
+    catch (e) { db.exec('ROLLBACK'); throw e; }
     log('INFO', '✔ Migración de CarouselItem completada');
   }
 }
@@ -467,7 +473,8 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
 
     const resultados = [];
 
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       upsertApoderado.run(apoderado);
       const apoderadoId = getApoderado.get(apoderado.rut).id;
 
@@ -515,7 +522,8 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
         }
         resultados.push(ninoResultado);
       }
-    })();
+      db.exec('COMMIT');
+    } catch (e) { db.exec('ROLLBACK'); throw e; }
 
     const algunaSinCupo = resultados.some(r => r.detalle.some(d => d.diasSinCupo.length > 0));
     res.json({ success: true, resultados, algunaSinCupo });
@@ -621,7 +629,8 @@ app.post('/api/admin/carousel/:id/upload', adminAuth, upload.array('files'), (re
   const results = [];
 
   try {
-    db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       for (const file of req.files) {
         maxOrder++;
         let filename;
@@ -639,7 +648,8 @@ app.post('/api/admin/carousel/:id/upload', adminAuth, upload.array('files'), (re
         const { lastInsertRowid } = insItem.run(carouselId, maxOrder, filePath);
         results.push({ id: lastInsertRowid, file_path: filePath, order_index: maxOrder });
       }
-    })();
+      db.exec('COMMIT');
+    } catch (e) { db.exec('ROLLBACK'); throw e; }
     res.json({ success: true, items: results });
   } catch (err) {
     for (const file of req.files) {
@@ -673,7 +683,9 @@ app.delete('/api/admin/carousel-item/:itemId', adminAuth, (req, res) => {
     'SELECT id FROM CarouselItem WHERE carousel_id = ? ORDER BY order_index'
   ).all(item.carousel_id);
   const reindex = db.prepare('UPDATE CarouselItem SET order_index = ? WHERE id = ?');
-  db.transaction(() => { remaining.forEach((r, idx) => reindex.run(idx, r.id)); })();
+  db.exec('BEGIN');
+  try { remaining.forEach((r, idx) => reindex.run(idx, r.id)); db.exec('COMMIT'); }
+  catch (e) { db.exec('ROLLBACK'); throw e; }
 
   res.json({ success: true });
 });
@@ -684,9 +696,11 @@ app.put('/api/admin/carousel/:id/reorder', adminAuth, (req, res) => {
   const { orderedIds } = req.body;
   if (!Array.isArray(orderedIds)) return res.status(400).json({ error: 'orderedIds debe ser un array' });
   const update = db.prepare('UPDATE CarouselItem SET order_index = ? WHERE id = ? AND carousel_id = ?');
-  db.transaction(() => {
+  db.exec('BEGIN');
+  try {
     orderedIds.forEach((itemId, newIndex) => update.run(newIndex, itemId, carouselId));
-  })();
+    db.exec('COMMIT');
+  } catch (e) { db.exec('ROLLBACK'); throw e; }
   res.json({ success: true });
 });
 
