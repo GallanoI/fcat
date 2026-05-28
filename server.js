@@ -18,7 +18,7 @@ try {
 }
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 // Límite de cupos por día por taller (configurable vía .env)
 const CUPOS_MAX = parseInt(process.env.CUPOS_MAX || '20', 10);
 
