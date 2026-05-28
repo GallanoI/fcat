@@ -7,7 +7,15 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const multer = require('multer');
-const { DatabaseSync: Database } = require('node:sqlite');
+let Database;
+try {
+  ({ DatabaseSync: Database } = require('node:sqlite'));
+} catch (_err) {
+  process.stderr.write(
+    `[FATAL] node:sqlite no disponible. Requiere Node.js >=22.5.0. Versión actual: ${process.version}\n`
+  );
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -15,14 +23,32 @@ const PORT = process.env.PORT || 3001;
 const CUPOS_MAX = parseInt(process.env.CUPOS_MAX || '20', 10);
 
 // ─── Logger ─────────────────────────────────────────────────────────────────
-const logsDir = path.join(__dirname, 'logs');
-if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
-const logStream = fs.createWriteStream(path.join(logsDir, 'server.log'), { flags: 'a' });
+let logStream = null;
+try {
+  const logsDir = path.join(__dirname, 'logs');
+  if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+  logStream = fs.createWriteStream(path.join(logsDir, 'server.log'), { flags: 'a' });
+} catch (e) {
+  process.stderr.write(`[WARN] No se pudo inicializar log en disco: ${e.message}\n`);
+}
 function log(level, msg) {
   const line = `[${new Date().toISOString()}] [${level}] ${msg}\n`;
   process.stdout.write(line);
-  logStream.write(line);
+  if (logStream) logStream.write(line);
 }
+
+// ─── Manejadores de errores globales ────────────────────────────────────────
+process.on('uncaughtException', (err) => {
+  const msg = `[${new Date().toISOString()}] [FATAL] uncaughtException: ${err.message}\n${err.stack}\n`;
+  process.stderr.write(msg);
+  if (logStream) try { logStream.write(msg); } catch (_) {}
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  const msg = `[${new Date().toISOString()}] [FATAL] unhandledRejection: ${String(reason)}\n`;
+  process.stderr.write(msg);
+  if (logStream) try { logStream.write(msg); } catch (_) {}
+});
 
 // ─── Base de datos ──────────────────────────────────────────────────────────
 const dataDir = path.join(__dirname, 'data');
