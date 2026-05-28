@@ -711,14 +711,17 @@ if (fs.existsSync(buildDir)) {
 }
 
 // ─── Inicio ─────────────────────────────────────────────────────────────────
-try {
-  initDatabase();
-} catch (err) {
-  log('ERROR', `Error al inicializar base de datos: ${err.message}`);
-  process.exit(1);
-}
+// app.listen va PRIMERO para que Hostinger vea el puerto activo de inmediato.
+// initDatabase() se ejecuta dentro del callback, después de que el puerto está bound.
 console.log('Intentando iniciar servidor en', PORT);
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en ${PORT}`);
   log('INFO', `FCAT API server → http://localhost:${PORT}`);
+  try {
+    initDatabase();
+    log('INFO', 'Base de datos inicializada correctamente');
+  } catch (err) {
+    log('ERROR', `Error al inicializar base de datos: ${err.message}`);
+    process.exit(1);
+  }
 });
