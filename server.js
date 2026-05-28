@@ -11,10 +11,10 @@ const multer = require('multer');
 let Database;
 try {
   ({ DatabaseSync: Database } = require('node:sqlite'));
+  console.log('node:sqlite OK');
 } catch (_err) {
-  process.stderr.write(
-    `[FATAL] node:sqlite no disponible. Requiere Node.js >=22.5.0. Versión actual: ${process.version}\n`
-  );
+  console.log(`[FATAL] node:sqlite no disponible. Node: ${process.version}. Error: ${_err.message}`);
+  process.stderr.write(`[FATAL] node:sqlite no disponible: ${_err.message}\n`);
   process.exit(1);
 }
 
@@ -37,6 +37,7 @@ function log(level, msg) {
   process.stdout.write(line);
   if (logStream) logStream.write(line);
 }
+console.log('logger OK');
 
 // ─── Manejadores de errores globales ────────────────────────────────────────
 process.on('uncaughtException', (err) => {
