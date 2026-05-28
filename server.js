@@ -716,12 +716,18 @@ if (fs.existsSync(buildDir)) {
 console.log('Intentando iniciar servidor en', PORT);
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en ${PORT}`);
-  log('INFO', `FCAT API server → http://localhost:${PORT}`);
-  try {
-    initDatabase();
-    log('INFO', 'Base de datos inicializada correctamente');
-  } catch (err) {
-    log('ERROR', `Error al inicializar base de datos: ${err.message}`);
-    process.exit(1);
-  }
+  // setImmediate: da al event loop un ciclo antes de ejecutar el trabajo
+  // sincrónico, para que Hostinger pueda procesar el health-check inicial.
+  setImmediate(() => {
+    console.log('initDatabase: iniciando...');
+    try {
+      initDatabase();
+      console.log('initDatabase: completado OK');
+    } catch (err) {
+      console.error(`[ERROR] initDatabase falló: ${err.message}`);
+      console.error(err.stack || '(sin stack)');
+      // Delay antes de exit para que stdout/stderr sean flushados
+      setTimeout(() => process.exit(1), 1000);
+    }
+  });
 });
