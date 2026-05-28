@@ -1,3 +1,4 @@
+console.log('FCAT startup — Node.js', process.version, '— pid', process.pid);
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -39,15 +40,17 @@ function log(level, msg) {
 
 // ─── Manejadores de errores globales ────────────────────────────────────────
 process.on('uncaughtException', (err) => {
-  const msg = `[${new Date().toISOString()}] [FATAL] uncaughtException: ${err.message}\n${err.stack}\n`;
-  process.stderr.write(msg);
-  if (logStream) try { logStream.write(msg); } catch (_) {}
+  const msg = `[FATAL] uncaughtException: ${err.message}\n${err.stack}`;
+  console.log(msg);
+  process.stderr.write(msg + '\n');
+  if (logStream) try { logStream.write(msg + '\n'); } catch (_) {}
   process.exit(1);
 });
 process.on('unhandledRejection', (reason) => {
-  const msg = `[${new Date().toISOString()}] [FATAL] unhandledRejection: ${String(reason)}\n`;
-  process.stderr.write(msg);
-  if (logStream) try { logStream.write(msg); } catch (_) {}
+  const msg = `[FATAL] unhandledRejection: ${String(reason)}`;
+  console.log(msg);
+  process.stderr.write(msg + '\n');
+  if (logStream) try { logStream.write(msg + '\n'); } catch (_) {}
 });
 
 // ─── Base de datos ──────────────────────────────────────────────────────────
