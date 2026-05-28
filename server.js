@@ -713,6 +713,8 @@ try {
   log('ERROR', `Error al inicializar base de datos: ${err.message}`);
   process.exit(1);
 }
+console.log('Intentando iniciar servidor en', PORT);
 app.listen(PORT, () => {
+  console.log(`Servidor escuchando en ${PORT}`);
   log('INFO', `FCAT API server → http://localhost:${PORT}`);
 });
