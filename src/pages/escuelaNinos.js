@@ -332,7 +332,7 @@ const EscuelaNinos = () => {
               className="ins-inscribirse-btn"
               onClick={() => window.open('/inscripcion', '_blank')}
             >
-              Inscribirse <span className="ins-aqui">AQUÍ</span>
+              Inscribirse a los talleres <span className="ins-gratis">Gratis</span> <span className="ins-aqui">Aquí</span>
             </button>
 
           </div>

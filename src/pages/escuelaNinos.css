@@ -674,7 +674,8 @@
   transform: scale(1.01);
 }
 
-.ins-aqui {
+.ins-aqui,
+.ins-gratis {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
