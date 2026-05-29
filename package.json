@@ -28,7 +28,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node --disable-warning=ExperimentalWarning server.js",
     "start:dev": "concurrently \"node server.js\" \"react-scripts start\"",
     "start:prod": "node server.js",
     "stop": "taskkill /F /IM node.exe /T 2>nul & exit 0",
