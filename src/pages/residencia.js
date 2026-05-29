@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Carousel from '../components/carousel';
@@ -89,6 +89,13 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
       }
     };
   }, [onSplashVisibilityChange, onLogoThemeChange]);
+
+  useLayoutEffect(() => {
+    if (!showSplash && pageRef.current) {
+      pageRef.current.scrollTop = 0;
+      pageRef.current.dispatchEvent(new Event('scroll'));
+    }
+  }, [showSplash]);
 
   const [materiales, setMateriales] = useState([]);
   const [residentes, setResidentes] = useState([]);

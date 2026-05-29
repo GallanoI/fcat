@@ -49,9 +49,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (location.pathname === '/creacion/residencia') {
-      setIsResidenciaSplashVisible(true);
-    } else {
+    if (location.pathname !== '/creacion/residencia') {
       setIsResidenciaSplashVisible(false);
       setLogoThemeOverride(null);
     }

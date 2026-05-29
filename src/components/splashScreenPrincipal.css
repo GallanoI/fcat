@@ -1,3 +1,18 @@
+.splash-tap-prompt {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 0.6em 1.4em;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}
+
 .splash-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -5,7 +5,9 @@ const windAudio = process.env.PUBLIC_URL + '/assets/audios/wind.mp3';
 
 const SplashScreenPrincipal = ({ onFinish, trigger }) => {
   const audioRef = useRef(null);
+  const audioCtxRef = useRef(null);
   const [animationReady, setAnimationReady] = useState(false);
+  const [showTapPrompt, setShowTapPrompt] = useState(false);
 
   useEffect(() => {
     const FADE_DURATION = 1.5;
@@ -39,6 +41,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
 
     const setupAndPlay = () => {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtxRef.current = audioCtx;
       const source = audioCtx.createMediaElementSource(audio);
       gainNode = audioCtx.createGain();
       gainNode.gain.setValueAtTime(0.9, audioCtx.currentTime);
@@ -58,6 +61,7 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
       audio.play().catch(() => {
         clearTimeout(finishTimeout);
         finishTimeout = setTimeout(finishSplash, 6000);
+        setShowTapPrompt(true);
       });
     };
 
@@ -82,9 +86,23 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
       if (audioCtx) {
         audioCtx.close();
         audioCtx = null;
+        audioCtxRef.current = null;
       }
     };
   }, [onFinish, trigger]);
+
+  const handleSplashClick = () => {
+    if (!showTapPrompt) return;
+    setShowTapPrompt(false);
+    const ctx = audioCtxRef.current;
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().then(() => {
+        audioRef.current && audioRef.current.play().catch(() => {});
+      });
+    } else if (audioRef.current) {
+      audioRef.current.play().catch(() => {});
+    }
+  };
 
   const bgVariant = {
     hidden: { scale: 0.8, opacity: 0 },
@@ -163,7 +181,14 @@ const SplashScreenPrincipal = ({ onFinish, trigger }) => {
       initial="hidden"
       animate={animationReady ? 'visible' : 'hidden'}
       exit={{ opacity: 0 }}
+      onClick={handleSplashClick}
+      style={{ cursor: showTapPrompt ? 'pointer' : 'default' }}
     >
+      {showTapPrompt && (
+        <div className="splash-tap-prompt">
+          Toca para activar el sonido
+        </div>
+      )}
       <div className="splash-grid">
         <motion.div 
           className="splash-left"

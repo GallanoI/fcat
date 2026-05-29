@@ -1,7 +1,7 @@
 // Servicio de base de datos.
 // Accede al backend Express (server.js) via fetch.
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const API_URL = process.env.REACT_APP_API_URL || '';
 
 /** @returns {Promise<Array>} Lista de todos los talleres */
 export const getTalleres = () =>
