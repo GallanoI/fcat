@@ -21,6 +21,7 @@ import {
   getAdminCarousels,
   getAdminCarouselItems,
   getAdminDbInfo,
+  getAdminApoderados,
   uploadCarouselFiles,
   deleteCarouselItem,
   reorderCarouselItems,
@@ -101,6 +102,10 @@ function SortableThumb({ item, isSelected, mode, onToggle }) {
 function DBInfoPanel({ token }) {
   const [data, setData] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
+  const [sortCol, setSortCol] = useState(null);   // null | field name
+  const [sortDir, setSortDir] = useState('asc');  // 'asc' | 'desc'
+  const [showApoderados, setShowApoderados] = useState(false);
+  const [apoderados, setApoderados] = useState(null);
 
   useEffect(() => {
     getAdminDbInfo(token).then((d) => {
@@ -109,6 +114,65 @@ function DBInfoPanel({ token }) {
     });
   }, [token]);
 
+  const handleSortClick = (col) => {
+    if (sortCol === col) {
+      if (sortDir === 'asc') setSortDir('desc');
+      else if (sortDir === 'desc') { setSortCol(null); setSortDir('asc'); }
+    } else {
+      setSortCol(col);
+      setSortDir('asc');
+    }
+  };
+
+  const getSortIcon = (col) => {
+    if (sortCol !== col) return '↕';
+    return sortDir === 'asc' ? '↑' : '↓';
+  };
+
+  const sortRows = (rows) => {
+    if (!sortCol) return rows;
+    return [...rows].sort((a, b) => {
+      const va = a[sortCol];
+      const vb = b[sortCol];
+      // numeric sort for edad
+      if (sortCol === 'edad') {
+        const na = Number(va), nb = Number(vb);
+        return sortDir === 'asc' ? na - nb : nb - na;
+      }
+      const sa = String(va ?? '').toLowerCase();
+      const sb = String(vb ?? '').toLowerCase();
+      if (sa < sb) return sortDir === 'asc' ? -1 : 1;
+      if (sa > sb) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const handleShowApoderados = () => {
+    setShowApoderados(true);
+    if (!apoderados) {
+      getAdminApoderados(token).then((d) => setApoderados(d.apoderados || []));
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (!apoderados) return;
+    const headers = ['Nombre completo', 'RUT', 'Teléfono', 'Correo electrónico', 'Dirección', 'Cantidad de niños', 'Nombre Niño/a', 'RUT Niño/a'];
+    const rows = apoderados.map((a) => [
+      a.nombre, a.rut, a.telefono, a.correo, a.direccion,
+      a.cantidad_ninos, a.ninos_nombres, a.ninos_ruts,
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'apoderados.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (!data) return <div className="adm-loading">Cargando...</div>;
 
   const { talleres, inscripciones } = data;
@@ -116,18 +180,27 @@ function DBInfoPanel({ token }) {
   return (
     <div className="adm-dbinfo">
       <h2 className="adm-section-title">Información de Base de Datos</h2>
-      <div className="adm-db-tabs">
-        {talleres.map((t) => (
-          <button
-            key={t.id}
-            className={`adm-db-tab${activeTab === t.id ? ' active' : ''}`}
-            onClick={() => setActiveTab(t.id)}
-          >
-            {t.nombre_taller}
-          </button>
-        ))}
+      <div className="adm-db-tabs-row">
+        <div className="adm-db-tabs">
+          {talleres.map((t) => (
+            <button
+              key={t.id}
+              className={`adm-db-tab${!showApoderados && activeTab === t.id ? ' active' : ''}`}
+              onClick={() => { setActiveTab(t.id); setShowApoderados(false); }}
+            >
+              {t.nombre_taller}
+            </button>
+          ))}
+        </div>
+        <button
+          className={`adm-db-tab adm-db-tab-apoderado${showApoderados ? ' active' : ''}`}
+          onClick={handleShowApoderados}
+        >
+          Apoderado
+        </button>
       </div>
-      {talleres.map((t) =>
+
+      {!showApoderados && talleres.map((t) =>
         activeTab !== t.id ? null : (
           <div key={t.id} className="adm-db-panel">
             <p className="adm-db-tallerista">Tallerista: {t.nombre_tallerista}</p>
@@ -136,17 +209,26 @@ function DBInfoPanel({ token }) {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Nombre niño/a</th>
-                    <th>Edad</th>
-                    <th>Días</th>
-                    <th>Apoderado</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
+                    {[
+                      { col: 'nino_nombre',      label: 'Nombre niño/a' },
+                      { col: 'edad',             label: 'Edad' },
+                      { col: 'dias_asistencia',  label: 'Días' },
+                      { col: 'apoderado_nombre', label: 'Apoderado' },
+                      { col: 'telefono',         label: 'Teléfono' },
+                      { col: 'correo',           label: 'Correo' },
+                    ].map(({ col, label }) => (
+                      <th
+                        key={col}
+                        className="adm-sortable-th"
+                        onClick={() => handleSortClick(col)}
+                      >
+                        {label} <span className="adm-sort-icon">{getSortIcon(col)}</span>
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {inscripciones
-                    .filter((i) => i.nombre_taller === t.nombre_taller)
+                  {sortRows(inscripciones.filter((i) => i.nombre_taller === t.nombre_taller))
                     .map((i, idx) => (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
@@ -163,6 +245,50 @@ function DBInfoPanel({ token }) {
             </div>
           </div>
         )
+      )}
+
+      {showApoderados && (
+        <div className="adm-db-panel">
+          {!apoderados ? (
+            <div className="adm-loading">Cargando apoderados...</div>
+          ) : (
+            <>
+              <div className="adm-db-table-wrap">
+                <table className="adm-db-table">
+                  <thead>
+                    <tr>
+                      <th>Nombre completo</th>
+                      <th>RUT</th>
+                      <th>Teléfono</th>
+                      <th>Correo electrónico</th>
+                      <th>Dirección</th>
+                      <th>Cant. niños</th>
+                      <th>Nombre Niño/a</th>
+                      <th>RUT Niño/a</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {apoderados.map((a, idx) => (
+                      <tr key={idx}>
+                        <td>{a.nombre}</td>
+                        <td>{a.rut}</td>
+                        <td>{a.telefono}</td>
+                        <td>{a.correo}</td>
+                        <td>{a.direccion}</td>
+                        <td>{a.cantidad_ninos}</td>
+                        <td>{a.ninos_nombres}</td>
+                        <td>{a.ninos_ruts}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button className="adm-csv-btn" onClick={handleExportCSV}>
+                Exportar CSV
+              </button>
+            </>
+          )}
+        </div>
       )}
     </div>
   );

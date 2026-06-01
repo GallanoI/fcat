@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './logoMenu.css';
 
 const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride = null }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // touch-mode open state
+  const containerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Detect touch-capable device (including hybrids): use touch behavior only
+  const isTouchDevice = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(any-pointer: coarse)').matches
+  ).current;
 
   const options = ["Inicio", "Quienes Somos", "Misión y Visión", "Administración"];
 
@@ -48,11 +55,9 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
     }
 
     const path = location.pathname;
-    // Excluimos Home y raíces de pilares
     const mainPaths = ["/"];
     if (mainPaths.includes(path)) return null;
 
-    // Detectar a qué pilar pertenece la subcategoría
     if (path.includes("creacion") || path.includes("residencia")) return pillarConfigs.creacion;
     if (path.includes("difusion")) return pillarConfigs.difusion;
     if (path.includes("educacion")) return pillarConfigs.educacion;
@@ -68,12 +73,8 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
     const cleanPath = pathname.replace(/\/+$/, '') || '/';
     const segments = cleanPath.split('/').filter(Boolean);
 
-    // Ya estamos en raíz: no hacer nada
-    if (segments.length === 0) {
-      return null;
-    }
+    if (segments.length === 0) return null;
 
-    // Caso especial: perfil residente -> residencia + scroll a residentes
     const isResidentProfilePath =
       segments[0] === 'creacion' &&
       segments[1] === 'residencia' &&
@@ -86,7 +87,6 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
       };
     }
 
-    // Regla general: subir un nivel de ruta
     if (segments.length === 1) {
       return { path: '/', options: { replace: true } };
     }
@@ -106,9 +106,7 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
 
   const handleNavigation = (opt) => {
     if (opt === "Inicio") {
-      if (onRequestInicioSplash) {
-        onRequestInicioSplash();
-      }
+      if (onRequestInicioSplash) onRequestInicioSplash();
       navigate("/");
     } else if (opt === "Quienes Somos") {
       navigate("/quienes");
@@ -119,21 +117,48 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
     } else {
       navigate(`/${opt.toLowerCase().replace(/ /g, "-")}`);
     }
-    setIsHovered(false);
+    if (isTouchDevice) setIsMenuOpen(false);
+    else setIsHovered(false);
   };
 
+  // Touch: close on outside tap or scroll
+  useEffect(() => {
+    if (!isTouchDevice) return undefined;
+
+    const handleOutsideClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    const handleScroll = () => setIsMenuOpen(false);
+
+    document.addEventListener('touchstart', handleOutsideClick, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+
+    return () => {
+      document.removeEventListener('touchstart', handleOutsideClick);
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+    };
+  }, [isTouchDevice]);
+
+  // Close touch menu on route change
+  useEffect(() => {
+    if (isTouchDevice) setIsMenuOpen(false);
+  }, [location.pathname, isTouchDevice]);
+
   // Definición de estilos dinámicos
+  const isOpen = isTouchDevice ? isMenuOpen : isHovered;
+
   const getLogoStyles = () => {
     if (context) {
-      // Estilo en Subcategoría
       return {
         backgroundColor: context.bg,
         border: `4px solid ${context.border}`,
       };
     } else {
-      // Estilo por defecto (Home / Pilar)
       return {
-        border: `3px solid ${isHovered ? 'white' : 'black'}`,
+        border: `3px solid ${isOpen ? 'white' : 'black'}`,
         backgroundColor: 'transparent'
       };
     }
@@ -142,22 +167,57 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
   const isResidentView = residentView || location.pathname.startsWith('/creacion/residencia/');
   const isVMVPage = location.pathname === '/vmv';
 
+  // Touch: handle logo-wrapper tap
+  const handleLogoWrapperTouch = (e) => {
+    e.preventDefault(); // prevent ghost click
+    if (isMenuOpen && context) {
+      // Second tap on logo: navigate back
+      setIsMenuOpen(false);
+      handleLogoClick();
+    } else if (isMenuOpen) {
+      // No context (home/pillar root): close menu
+      setIsMenuOpen(false);
+    } else {
+      // First tap: open menu
+      setIsMenuOpen(true);
+    }
+  };
+
+  // Touch: handle container tap to open (when tapping outside logo-wrapper)
+  const handleContainerTouch = (e) => {
+    if (!isMenuOpen) {
+      e.preventDefault();
+      setIsMenuOpen(true);
+    }
+  };
+
   return (
     <div
+      ref={containerRef}
       className={`logo-container ${isVMVPage ? 'logo-vmv' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={isTouchDevice ? undefined : () => setIsHovered(true)}
+      onMouseLeave={isTouchDevice ? undefined : () => setIsHovered(false)}
+      onTouchEnd={isTouchDevice ? handleContainerTouch : undefined}
       style={isResidentView ? { left: '40px' } : undefined}
     >
       
       <div 
         className="logo-wrapper"
         style={getLogoStyles()}
-        onClick={handleLogoClick}
+        onClick={isTouchDevice ? undefined : handleLogoClick}
+        onTouchEnd={isTouchDevice ? handleLogoWrapperTouch : undefined}
       >
-        {/* Si estamos en subcategoría y hay hover, mostramos el texto y tapamos el logo */}
-        {context && isHovered ? (
-          <div className="logo-back-text" style={{ color: isResidentView ? '#000' : context.color }}>
+        {/* Si estamos en subcategoría y hay apertura, mostramos el texto y tapamos el logo */}
+        {context && isOpen ? (
+          <div
+            className="logo-back-text"
+            style={{
+              color: isResidentView ? '#000' : context.color,
+              ...(context === pillarConfigs.creacion
+                ? { WebkitTextStroke: '1px black' }
+                : undefined),
+            }}
+          >
             <span>Volver a la </span>
             <span>Página Anterior</span>
           </div>
@@ -165,8 +225,8 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
           <img 
             src={
               isResidentView
-                ? (isHovered ? `${publicUrl}/logoFCAT.png` : `${publicUrl}/logoFCAT-N.png`)
-                : (isHovered ? `${publicUrl}/logoFCAT-N.png` : `${publicUrl}/logoFCAT.png`)
+                ? (isOpen ? `${publicUrl}/logoFCAT.png` : `${publicUrl}/logoFCAT-N.png`)
+                : (isOpen ? `${publicUrl}/logoFCAT-N.png` : `${publicUrl}/logoFCAT.png`)
             } 
             alt="Logo" 
             className="logo-img"
@@ -174,7 +234,7 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
         )}
       </div>
       
-      {isHovered && (
+      {isOpen && (
         <ul className="dropdown-menu">
           {options.map((opt) => (
             <li 
@@ -190,5 +250,6 @@ const LogoMenu = ({ residentView = false, onRequestInicioSplash, themeOverride =
     </div>
   );
 };
+
 
 export default LogoMenu;

@@ -227,11 +227,20 @@
 /* ── DB Info panel ──────────────────────────────────────────────────────── */
 .adm-dbinfo { color: #fff; }
 
+.adm-db-tabs-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
 .adm-db-tabs {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  flex: 1;
 }
 
 .adm-db-tab {
@@ -251,6 +260,39 @@
   background: rgba(255,0,0,0.25);
   border-color: rgba(255,0,0,0.6);
   color: #fff;
+}
+
+.adm-db-tab-apoderado {
+  flex-shrink: 0;
+}
+
+.adm-sortable-th {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.adm-sort-icon {
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.adm-csv-btn {
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.adm-csv-btn:hover {
+  background: rgba(255,255,255,0.22);
 }
 
 .adm-db-tallerista {

@@ -116,6 +116,14 @@ const EscuelaCine = () => {
         info={zoomInfoIndex !== null ? cineZoomDetails[zoomInfoIndex] : null}
         onClose={() => setZoomInfoIndex(null)}
         overlayColor="rgba(251, 125, 102, 1)"
+        onNavigate={(dir) => {
+          const total = cineItems.length;
+          if (total < 2) return;
+          setZoomInfoIndex((prev) =>
+            dir === 'next' ? (prev + 1) % total : (prev - 1 + total) % total
+          );
+        }}
+        totalItems={cineItems.length}
       />
 
       <Zoom

@@ -37,7 +37,7 @@ const TITLE_RIGHT = (
 
 const ExpExiPreciones = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [zoomItem, setZoomItem] = useState(null);
+  const [zoomIndex, setZoomIndex] = useState(null);
   const [isAudioAutoplayHold, setIsAudioAutoplayHold] = useState(false);
   const resumeTimeoutRef = useRef(null);
   const [duexpreItems, setDuexpreItems] = useState([]);
@@ -137,7 +137,7 @@ const ExpExiPreciones = () => {
                   item={activeItem}
                   alt="Obra actual"
                   className="exp-feature-panel"
-                  onClick={() => activeItem && setZoomItem(activeItem)}
+                  onClick={() => activeItem && setZoomIndex(safeIndex)}
                 />
                 <RepAudio
                   className="exp-audio-btn"
@@ -175,8 +175,8 @@ const ExpExiPreciones = () => {
                 className="exp-duexpre-carousel exp-duexpre-carousel-responsive"
                 backgroundColor="rgba(8, 84, 184, 0.5)"
                 onIndexChange={setSelectedIndex}
-                onImageClick={(item, idx) => setZoomItem(duexpreItems[idx])}
-                isPaused={isAudioAutoplayHold || !!zoomItem}
+                onImageClick={(item, idx) => setZoomIndex(idx)}
+                isPaused={isAudioAutoplayHold || zoomIndex !== null}
               />
             </div>
 
@@ -221,8 +221,11 @@ const ExpExiPreciones = () => {
       )}
 
       <Zoom
-        item={zoomItem}
-        onClose={() => setZoomItem(null)}
+        item={zoomIndex !== null ? duexpreItems[zoomIndex] : null}
+        items={duexpreItems}
+        currentIndex={zoomIndex}
+        onNavigate={setZoomIndex}
+        onClose={() => setZoomIndex(null)}
         overlayColor={ZOOM_OVERLAY_COLORS.expExiPreciones}
       />
     </div>

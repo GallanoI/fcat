@@ -469,6 +469,25 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
     const getCuposDia = db.prepare(
       `SELECT COUNT(*) as cnt FROM Inscripcion WHERE taller_id = ? AND dias_asistencia LIKE '%' || ? || '%'`
     );
+
+    // Detección de duplicados fuzzy: 3+ de 5 campos coinciden en el mismo taller+día
+    // Campos: nombre niño, edad, nombre apoderado, teléfono, correo (case-insensitive, trimmed)
+    const checkDuplicate = db.prepare(`
+      SELECT COUNT(*) AS cnt
+      FROM Inscripcion i
+      JOIN Nino n ON i.nino_id = n.id
+      JOIN Apoderado a ON n.apoderado_id = a.id
+      WHERE i.taller_id = @tallerId
+        AND i.dias_asistencia LIKE '%' || @fecha || '%'
+        AND n.id <> @ninoId
+        AND (
+          (LOWER(TRIM(n.nombre))   = LOWER(TRIM(@nombreNino)))  +
+          (CAST(n.edad AS TEXT)    = CAST(@edad AS TEXT))        +
+          (LOWER(TRIM(a.nombre))   = LOWER(TRIM(@nombreApo)))   +
+          (TRIM(a.telefono)        = TRIM(@telefono))            +
+          (LOWER(TRIM(a.correo))   = LOWER(TRIM(@correo)))
+        ) >= 3
+    `);
     const getTallerNombre = db.prepare('SELECT nombre_taller FROM Taller WHERE id = ?');
 
     const resultados = [];
@@ -497,12 +516,22 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
 
           for (const fecha of diasSolicitados) {
             if (!FECHA_RE.test(fecha)) { diasSinCupo.push(fecha); continue; }
+            // Verificar cupo disponible
             const { cnt } = getCuposDia.get(insc.tallerId, fecha);
-            if (cnt < CUPOS_MAX) {
-              diasInscritos.push(fecha);
-            } else {
-              diasSinCupo.push(fecha);
-            }
+            if (cnt >= CUPOS_MAX) { diasSinCupo.push(fecha); continue; }
+            // Detección fuzzy de duplicado: si 3+ campos coinciden, omitir silenciosamente
+            const dupRow = checkDuplicate.get({
+              tallerId:   insc.tallerId,
+              fecha,
+              ninoId,
+              nombreNino: nino.nombre,
+              edad:       nino.edad,
+              nombreApo:  apoderado.nombre,
+              telefono:   apoderado.telefono,
+              correo:     apoderado.correo,
+            });
+            if (dupRow && dupRow.cnt > 0) continue; // duplicado fuzzy → saltar silenciosamente
+            diasInscritos.push(fecha);
           }
 
           if (diasInscritos.length > 0) {
@@ -601,6 +630,48 @@ app.get('/api/admin/db-info', adminAuth, (req, res) => {
     ORDER BY t.fecha1, n.nombre
   `).all();
   res.json({ talleres, inscripciones });
+});
+
+app.get('/api/admin/apoderados', adminAuth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT a.id, a.nombre AS apoderado_nombre, a.rut AS apoderado_rut,
+           a.telefono, a.correo, a.direccion,
+           n.nombre AS nino_nombre, n.rut AS nino_rut
+    FROM Apoderado a
+    LEFT JOIN Nino n ON n.apoderado_id = a.id
+    ORDER BY a.nombre, n.nombre
+  `).all();
+
+  // Agrupar por apoderado, concatenar hijos con ";"
+  const map = new Map();
+  for (const row of rows) {
+    if (!map.has(row.id)) {
+      map.set(row.id, {
+        nombre:     row.apoderado_nombre,
+        rut:        row.apoderado_rut,
+        telefono:   row.telefono,
+        correo:     row.correo,
+        direccion:  row.direccion,
+        ninos:      [],
+      });
+    }
+    if (row.nino_nombre) {
+      map.get(row.id).ninos.push({ nombre: row.nino_nombre, rut: row.nino_rut });
+    }
+  }
+
+  const apoderados = Array.from(map.values()).map((a) => ({
+    nombre:         a.nombre,
+    rut:            a.rut,
+    telefono:       a.telefono,
+    correo:         a.correo,
+    direccion:      a.direccion,
+    cantidad_ninos: a.ninos.length,
+    ninos_nombres:  a.ninos.map((n) => n.nombre).join(';'),
+    ninos_ruts:     a.ninos.map((n) => n.rut).join(';'),
+  }));
+
+  res.json({ apoderados });
 });
 
 app.post('/api/admin/carousel/:id/upload', adminAuth, upload.array('files'), (req, res) => {

@@ -221,6 +221,46 @@ const Carousel = ({
     }
   };
 
+  // Touch swipe (additive to mouse drag; same logic)
+  const touchStartXRef = useRef(null);
+
+  const handleTouchStart = (e) => {
+    if (totalItems <= 1) return;
+    touchStartXRef.current = e.touches[0].clientX;
+    clearAutoPlayTimer();
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStartXRef.current === null || !viewportRef.current) return;
+    const delta = e.touches[0].clientX - touchStartXRef.current;
+    const vw = viewportRef.current.offsetWidth || 1;
+    setDragOffset((delta / vw) * 100);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartXRef.current;
+    touchStartXRef.current = null;
+
+    const itemWidth = 100 / visibleItems;
+    const normalizedOffset = (dragOffset || (delta / (viewportRef.current?.offsetWidth || 1)) * 100) / itemWidth;
+    let newTrackIndex = trackIndex;
+
+    if (Math.abs(normalizedOffset) > 0.3) {
+      newTrackIndex =
+        normalizedOffset > 0
+          ? trackIndex - Math.ceil(normalizedOffset)
+          : trackIndex + Math.ceil(Math.abs(normalizedOffset));
+    }
+
+    setTrackIndex(newTrackIndex);
+    setDragOffset(0);
+
+    if (newTrackIndex === trackIndex && !activeItemIsVideo) {
+      scheduleAutoAdvance(autoPlayInterval);
+    }
+  };
+
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -285,6 +325,9 @@ const Carousel = ({
           ref={viewportRef}
           style={{ width: '100%', overflow: 'hidden' }}
           onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           <div
             ref={trackRef}

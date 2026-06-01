@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import Carousel from '../components/carousel';
 import SplashScreenResidencia from '../components/splashScreenResidencia';
 import CircleItemMenu from '../components/circleItemMenu';
@@ -14,14 +13,13 @@ let residenciaSplashShown = false;
 
 const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
   const [showSplash, setShowSplash] = useState(!residenciaSplashShown);
-  const [zoomItem, setZoomItem] = useState(null);
+  const [zoomIndex, setZoomIndex] = useState(null);
   const [activeLogoTheme, setActiveLogoTheme] = useState('creacion');
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 1200
   );
   const pageRef = useRef(null);
   const section1Ref = useRef(null);
-  const section2Ref = useRef(null);
   const section3Ref = useRef(null);
   const section4Ref = useRef(null);
 
@@ -31,14 +29,6 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
   const materialesVisibleItems = isMax480 ? 1 : isMax800 ? 2 : 3;
   const RESIDENTES_AUTOPLAY_MS = 5000; // <---- cambiar tiempo autoplay residentes
   const MATERIALES_AUTOPLAY_MS = 5000; // <---- cambiar tiempo autoplay materiales
-  
-  const { scrollYProgress } = useScroll({
-    container: pageRef,
-    target: section2Ref,
-    offset: ["start start", "end end"]
-  });
-
-  const panelY = useTransform(scrollYProgress, [0, 0.5, 1], ['-10px', '-45vh', '-120vh']);
   
   useEffect(() => {
     const handleResize = () => setViewportWidth(window.innerWidth);
@@ -170,48 +160,31 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
       </section>
 
       {/* SECCIÓN 2: INFO RESIDENCIA */}
-      <section className="section-16-9 slide-canvas res-info-section" ref={section2Ref}>
-        <motion.div
-          className="ascending-container"
-          style={{ y: isMax800 ? 0 : panelY, zIndex: 3000 }}
-        >
-          <div className="ascending-panel">
-            <div className="left-col">
-              <img
-                src={`${process.env.PUBLIC_URL || ''}/logoFCAT-N.png`}
-                alt="Logo CAT"
-                className="panel-logo"
-              />
-            </div>
-            <div className="right-col">
-              <p><br /></p>
-              <p>
-                {texto1}
-              </p>
-              {/*<img
-                src={require('../assets/fotos/residencia/residentes/Ciro.jpg')}
-                alt=""
-                className="panel-img"
-              />*/}
-              <p><br /></p>
-              <p>
-                {texto2}
-              </p>
-              {/*<img
-                src={require('../assets/fotos/residencia/residentes/Kenji.JPEG')}
-                alt=""
-                className="panel-img"
-              />*/}
-              <p><br /></p>
-              <p>
-                {texto3}
-              </p>
-              <p><br /></p>
-            </div>
+      <section className="section-16-9 slide-canvas res-info-section">
+        <div className="ascending-panel">
+          <div className="left-col">
+            <img
+              src={`${process.env.PUBLIC_URL || ''}/logoFCAT-N.png`}
+              alt="Logo CAT"
+              className="panel-logo"
+            />
           </div>
-
-
-        </motion.div>
+          <div className="right-col">
+            <p><br /></p>
+            <p>
+              {texto1}
+            </p>
+            <p><br /></p>
+            <p>
+              {texto2}
+            </p>
+            <p><br /></p>
+            <p>
+              {texto3}
+            </p>
+            <p><br /></p>
+          </div>
+        </div>
       </section>
 
       {/* SECCIÓN 3: RESIDENTES */}
@@ -276,14 +249,17 @@ const Residencia = ({ onSplashVisibilityChange, onLogoThemeChange }) => {
             showText={false}
             className="materiales-carousel"
             backgroundColor="rgba(173, 173, 173, 0.4)"
-            onImageClick={(item) => setZoomItem(item)}
+            onImageClick={(item, idx) => setZoomIndex(idx)}
           />
         </div>
       </section>
 
       <Zoom
-        item={zoomItem}
-        onClose={() => setZoomItem(null)}
+        item={zoomIndex !== null ? materiales[zoomIndex] : null}
+        items={materiales}
+        currentIndex={zoomIndex}
+        onNavigate={setZoomIndex}
+        onClose={() => setZoomIndex(null)}
         overlayColor={ZOOM_OVERLAY_COLORS.materialesResidencia}
       />
 

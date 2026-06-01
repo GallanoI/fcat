@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './zoomInfoCine.css';
 import { useZoomPause } from '../config/zoomPauseContext';
 
@@ -9,8 +9,11 @@ const getSafeText = (value) => {
 
 const defaultProfesores = ['TANIA PAZ', 'FRANCISCO HEBIA', 'BARBARA CASTILLO'];
 
-const ZoomInfoCine = ({ item, info, onClose, overlayColor }) => {
+const ZoomInfoCine = ({ item, info, onClose, overlayColor, onNavigate, totalItems }) => {
   const { registerZoomOpen, registerZoomClose } = useZoomPause();
+  const touchStartX = useRef(null);
+
+  const canNavigate = typeof onNavigate === 'function' && typeof totalItems === 'number' && totalItems > 1;
 
   useEffect(() => {
     if (!item) return undefined;
@@ -30,11 +33,25 @@ const ZoomInfoCine = ({ item, info, onClose, overlayColor }) => {
     ? info.profesores
     : defaultProfesores;
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null || !canNavigate) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    onNavigate(delta < 0 ? 'next' : 'prev');
+  };
+
   return (
     <div
       className="cine-zoom-overlay"
       onClick={onClose}
       style={overlayColor ? { '--cine-zoom-overlay-color': overlayColor } : undefined}
+      onTouchStart={canNavigate ? handleTouchStart : undefined}
+      onTouchEnd={canNavigate ? handleTouchEnd : undefined}
     >
       <div className="cine-zoom-shell">
         <div className="cine-zoom-panel">

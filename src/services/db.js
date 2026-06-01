@@ -72,6 +72,12 @@ export const getAdminDbInfo = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   }).then((r) => r.json());
 
+/** @returns {Promise<{apoderados: Array}>} */
+export const getAdminApoderados = (token) =>
+  fetch(`${API_URL}/api/admin/apoderados`, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((r) => r.json());
+
 /** @returns {Promise<{success: boolean, items: Array}>} */
 export const uploadCarouselFiles = (token, carouselId, files) => {
   const formData = new FormData();

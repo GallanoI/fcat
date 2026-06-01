@@ -25,7 +25,7 @@ const EscuelaNinos = () => {
   const lowerSectionRef = useRef(null);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [zoomItem, setZoomItem] = useState(null);
+  const [zoomIndex, setZoomIndex] = useState(null);
   const [isLowerStage, setIsLowerStage] = useState(false);
   const [isResponsiveLayout, setIsResponsiveLayout] = useState(
     typeof window !== 'undefined' ? window.innerWidth <= 800 : false
@@ -79,7 +79,7 @@ const EscuelaNinos = () => {
 
   const handleResponsiveCarouselClick = (item, index) => {
     setSelectedIndex(index);
-    if (item) setZoomItem(item);
+    if (item) setZoomIndex(index);
   };
 
   const handleTopLeftWheel = (e) => {
@@ -182,6 +182,7 @@ const EscuelaNinos = () => {
             <p className="escuela-text">
               Una invitación a la libertad creativa el arte y el conocimiento.
             </p>
+            {/*  
             <p className="escuela-text">
               Entendemos y aspiramos a que las vacaciones no sean como una pausa del pensamiento, sino
               como el momento ideal para que el aprendizaje se vuelva juego y la creatividad se transforme
@@ -194,6 +195,7 @@ const EscuelaNinos = () => {
             <p className="escuela-text">
               Así seguir creando en nuestros hogares hasta la siguiente salida del sol.
             </p>
+            */}
           </div>
         </div>
         <div className="escuela-right-spacer" />
@@ -359,8 +361,8 @@ const EscuelaNinos = () => {
                   item={activeItem}
                   alt="Escuela Niños actual"
                   className="escuela-active-panel"
-                  onClick={() => activeItem && setZoomItem(activeItem)}
-                  videoMuted={zoomItem !== null}
+                  onClick={() => activeItem && setZoomIndex(safeIndex)}
+                  videoMuted={zoomIndex !== null}
                 />
               </motion.div>
 
@@ -392,8 +394,11 @@ const EscuelaNinos = () => {
       )}
 
       <Zoom
-        item={zoomItem}
-        onClose={() => setZoomItem(null)}
+        item={zoomIndex !== null ? escuelaItems[zoomIndex] : null}
+        items={escuelaItems}
+        currentIndex={zoomIndex}
+        onNavigate={setZoomIndex}
+        onClose={() => setZoomIndex(null)}
         overlayColor={ZOOM_OVERLAY_COLORS.educacion}
       />
     </div>

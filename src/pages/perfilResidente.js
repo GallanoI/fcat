@@ -85,6 +85,14 @@ const PerfilResidente = () => {
           residentName={data.nombre}
           onClose={() => setZoomIndex(null)}
           overlayColor={ZOOM_OVERLAY_COLORS.residentes}
+          onNavigate={(dir) => {
+            const total = carouselImages.length;
+            if (total < 2) return;
+            setZoomIndex((prev) =>
+              dir === 'next' ? (prev + 1) % total : (prev - 1 + total) % total
+            );
+          }}
+          totalItems={carouselImages.length}
         />
       )}
     </div>

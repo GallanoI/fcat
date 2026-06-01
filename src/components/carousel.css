@@ -108,6 +108,10 @@
   position: relative;
 }
 
+.residentes-carousel .tab-container {
+  justify-content: center;
+}
+
 .tab-box {
   background-color: transparent;
   padding: 10px 20px;

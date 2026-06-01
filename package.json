@@ -1,7 +1,7 @@
 {
   "name": "fcat",
   "version": "0.1.0",
-  "description": "Aplicación web FCAT (Cultura y Arte de Tunquén)",
+  "description": "La Fundación Cultural Artística de Tunquen FCAT es el primer organizmo autogestionado para el apoyo de las artes de la quinta región de Valparaíso, Chile.",
   "author": "FCAT",
   "homepage": "/",
   "private": true,
