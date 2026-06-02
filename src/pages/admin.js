@@ -25,6 +25,8 @@ import {
   uploadCarouselFiles,
   deleteCarouselItem,
   reorderCarouselItems,
+  deleteInscripcionDia,
+  deleteApoderado,
 } from '../services/db';
 import './admin.css';
 
@@ -102,10 +104,11 @@ function SortableThumb({ item, isSelected, mode, onToggle }) {
 function DBInfoPanel({ token }) {
   const [data, setData] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
-  const [sortCol, setSortCol] = useState(null);   // null | field name
-  const [sortDir, setSortDir] = useState('asc');  // 'asc' | 'desc'
+  const [sortCol, setSortCol] = useState(null);
+  const [sortDir, setSortDir] = useState('asc');
   const [showApoderados, setShowApoderados] = useState(false);
   const [apoderados, setApoderados] = useState(null);
+  const [confirmModal, setConfirmModal] = useState(null);
 
   useEffect(() => {
     getAdminDbInfo(token).then((d) => {
@@ -134,7 +137,6 @@ function DBInfoPanel({ token }) {
     return [...rows].sort((a, b) => {
       const va = a[sortCol];
       const vb = b[sortCol];
-      // numeric sort for edad
       if (sortCol === 'edad') {
         const na = Number(va), nb = Number(vb);
         return sortDir === 'asc' ? na - nb : nb - na;
@@ -145,6 +147,12 @@ function DBInfoPanel({ token }) {
       if (sa > sb) return sortDir === 'asc' ? 1 : -1;
       return 0;
     });
+  };
+
+  const formatFecha = (f) => {
+    const d = new Date(String(f).trim().replace(' ', 'T'));
+    if (isNaN(d)) return f;
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
   };
 
   const handleShowApoderados = () => {
@@ -173,6 +181,72 @@ function DBInfoPanel({ token }) {
     URL.revokeObjectURL(url);
   };
 
+  const handleDeleteDia = (insc, fecha) => {
+    if (!data) return;
+    const diasList = insc.dias_asistencia.split(',').map((d) => d.trim());
+    const remaining = diasList.filter((d) => d !== fecha.trim());
+    const otherInsc = data.inscripciones.filter(
+      (i) => i.nino_id === insc.nino_id && i.inscripcion_id !== insc.inscripcion_id
+    );
+    const willDeleteNino = remaining.length === 0 && otherInsc.length === 0;
+    setConfirmModal({
+      type: 'dia',
+      inscripcionId: insc.inscripcion_id,
+      fecha: fecha.trim(),
+      fechaLabel: formatFecha(fecha.trim()),
+      ninoNombre: insc.nino_nombre,
+      tallerNombre: insc.nombre_taller,
+      willDeleteNino,
+    });
+  };
+
+  const handleDeleteApoderado = (apo) => {
+    if (!data) return;
+    const apoInsc = data.inscripciones.filter((i) => i.apoderado_id === apo.id);
+    const ninoMap = new Map();
+    for (const i of apoInsc) {
+      if (!ninoMap.has(i.nino_id)) {
+        ninoMap.set(i.nino_id, { nombre: i.nino_nombre, inscripciones: [] });
+      }
+      ninoMap.get(i.nino_id).inscripciones.push({
+        taller: i.nombre_taller,
+        dias: i.dias_asistencia.split(',').map((d) => d.trim()),
+      });
+    }
+    const inscribedNames = new Set([...ninoMap.values()].map((n) => n.nombre));
+    const allNames = apo.ninos_nombres ? apo.ninos_nombres.split(';').map((n) => n.trim()).filter(Boolean) : [];
+    for (const name of allNames) {
+      if (!inscribedNames.has(name)) {
+        ninoMap.set(`orphan-${name}`, { nombre: name, inscripciones: [] });
+      }
+    }
+    setConfirmModal({
+      type: 'apoderado',
+      apoderadoId: apo.id,
+      apoderadoNombre: apo.nombre,
+      apoderadoRut: apo.rut,
+      ninos: Array.from(ninoMap.values()),
+    });
+  };
+
+  const handleConfirmExecute = async () => {
+    if (!confirmModal) return;
+    try {
+      if (confirmModal.type === 'dia') {
+        await deleteInscripcionDia(token, confirmModal.inscripcionId, confirmModal.fecha);
+      } else if (confirmModal.type === 'apoderado') {
+        await deleteApoderado(token, confirmModal.apoderadoId);
+      }
+    } catch (e) {
+      console.error('Error al eliminar:', e);
+    }
+    setConfirmModal(null);
+    getAdminDbInfo(token).then((d) => setData(d));
+    if (apoderados !== null) {
+      getAdminApoderados(token).then((d) => setApoderados(d.apoderados || []));
+    }
+  };
+
   if (!data) return <div className="adm-loading">Cargando...</div>;
 
   const { talleres, inscripciones } = data;
@@ -180,6 +254,8 @@ function DBInfoPanel({ token }) {
   return (
     <div className="adm-dbinfo">
       <h2 className="adm-section-title">Información de Base de Datos</h2>
+
+      {/* ── Tabs ── */}
       <div className="adm-db-tabs-row">
         <div className="adm-db-tabs">
           {talleres.map((t) => (
@@ -200,6 +276,7 @@ function DBInfoPanel({ token }) {
         </button>
       </div>
 
+      {/* ── Inscripciones por taller ── */}
       {!showApoderados && talleres.map((t) =>
         activeTab !== t.id ? null : (
           <div key={t.id} className="adm-db-panel">
@@ -234,7 +311,18 @@ function DBInfoPanel({ token }) {
                         <td>{idx + 1}</td>
                         <td>{i.nino_nombre}</td>
                         <td>{i.edad}</td>
-                        <td className="adm-db-dias">{i.dias_asistencia}</td>
+                        <td className="adm-db-dias">
+                          {i.dias_asistencia.split(',').map((f) => f.trim()).filter(Boolean).map((f) => (
+                            <span key={f} className="adm-dia-tag">
+                              {formatFecha(f)}
+                              <button
+                                className="adm-dia-x"
+                                title="Eliminar este día"
+                                onClick={() => handleDeleteDia(i, f)}
+                              >×</button>
+                            </span>
+                          ))}
+                        </td>
                         <td>{i.apoderado_nombre}</td>
                         <td>{i.telefono}</td>
                         <td>{i.correo}</td>
@@ -247,6 +335,7 @@ function DBInfoPanel({ token }) {
         )
       )}
 
+      {/* ── Apoderados ── */}
       {showApoderados && (
         <div className="adm-db-panel">
           {!apoderados ? (
@@ -265,21 +354,36 @@ function DBInfoPanel({ token }) {
                       <th>Cant. niños</th>
                       <th>Nombre Niño/a</th>
                       <th>RUT Niño/a</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {apoderados.map((a, idx) => (
-                      <tr key={idx}>
-                        <td>{a.nombre}</td>
-                        <td>{a.rut}</td>
-                        <td>{a.telefono}</td>
-                        <td>{a.correo}</td>
-                        <td>{a.direccion}</td>
-                        <td>{a.cantidad_ninos}</td>
-                        <td>{a.ninos_nombres}</td>
-                        <td>{a.ninos_ruts}</td>
-                      </tr>
-                    ))}
+                    {apoderados.map((a, idx) => {
+                      const isOrphan = a.cantidad_ninos === 0;
+                      return (
+                        <tr key={idx} className={isOrphan ? 'adm-row-orphan' : ''}>
+                          <td>{a.nombre}</td>
+                          <td>{a.rut}</td>
+                          <td>{a.telefono}</td>
+                          <td>{a.correo}</td>
+                          <td>{a.direccion}</td>
+                          <td>
+                            {isOrphan
+                              ? <span className="adm-orphan-badge">⚠ 0</span>
+                              : a.cantidad_ninos}
+                          </td>
+                          <td>{a.ninos_nombres}</td>
+                          <td>{a.ninos_ruts}</td>
+                          <td>
+                            <button
+                              className="adm-del-apo-btn"
+                              title="Eliminar apoderado"
+                              onClick={() => handleDeleteApoderado(a)}
+                            >🗑</button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -288,6 +392,60 @@ function DBInfoPanel({ token }) {
               </button>
             </>
           )}
+        </div>
+      )}
+
+      {/* ── Modal de confirmación ── */}
+      {confirmModal && (
+        <div className="adm-confirm-overlay" onClick={() => setConfirmModal(null)}>
+          <div className="adm-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            {confirmModal.type === 'dia' && (
+              <>
+                <p className="adm-confirm-title">¿Eliminar inscripción?</p>
+                <p className="adm-confirm-body">
+                  Día <strong>{confirmModal.fechaLabel}</strong> de{' '}
+                  <strong>{confirmModal.ninoNombre}</strong> en{' '}
+                  <strong>{confirmModal.tallerNombre}</strong>.
+                </p>
+                {confirmModal.willDeleteNino && (
+                  <p className="adm-confirm-warning">
+                    ⚠ Este niño quedará sin inscripciones y su registro será eliminado del sistema.
+                  </p>
+                )}
+              </>
+            )}
+            {confirmModal.type === 'apoderado' && (
+              <>
+                <p className="adm-confirm-title">¿Eliminar apoderado?</p>
+                <p className="adm-confirm-body">
+                  <strong>{confirmModal.apoderadoNombre}</strong> — RUT: {confirmModal.apoderadoRut}
+                </p>
+                <p className="adm-confirm-warning">
+                  ⚠ Se eliminarán también todos sus niños e inscripciones:
+                </p>
+                <ul className="adm-confirm-list">
+                  {confirmModal.ninos.map((n, i) => (
+                    <li key={i}>
+                      <strong>{n.nombre}</strong>
+                      {n.inscripciones.length > 0
+                        ? ': ' + n.inscripciones.map(
+                            (ins) => `${ins.taller} (${ins.dias.map(formatFecha).join(', ')})`
+                          ).join(' · ')
+                        : ' — sin inscripciones'}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <div className="adm-confirm-btns">
+              <button className="adm-confirm-btn adm-confirm-cancel" onClick={() => setConfirmModal(null)}>
+                Cancelar
+              </button>
+              <button className="adm-confirm-btn adm-confirm-ok" onClick={handleConfirmExecute}>
+                Eliminar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -468,6 +468,149 @@
   display: block;
 }
 
+/* ── Día tags en tabla de inscripciones ──────────────────────────────────── */
+.adm-dia-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  padding: 2px 4px 2px 6px;
+  margin: 2px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.adm-dia-x {
+  background: none;
+  border: none;
+  color: rgba(255,100,100,0.8);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.adm-dia-x:hover { color: #ff4444; }
+
+/* ── Botón eliminar apoderado ────────────────────────────────────────────── */
+.adm-del-apo-btn {
+  background: none;
+  border: 1px solid rgba(255,80,80,0.4);
+  border-radius: 4px;
+  color: rgba(255,100,100,0.7);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 3px 7px;
+  transition: all 0.15s;
+}
+
+.adm-del-apo-btn:hover {
+  background: rgba(255,0,0,0.2);
+  border-color: rgba(255,80,80,0.8);
+  color: #ff6666;
+}
+
+/* ── Fila apoderado huérfano (0 niños) ───────────────────────────────────── */
+.adm-row-orphan td { opacity: 0.65; }
+
+.adm-orphan-badge {
+  color: #ffaa00;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* ── Modal de confirmación ───────────────────────────────────────────────── */
+.adm-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-confirm-modal {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,0,0,0.4);
+  border-radius: 10px;
+  padding: 28px 32px;
+  max-width: 460px;
+  width: 90%;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+}
+
+.adm-confirm-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.adm-confirm-body {
+  font-size: 0.95rem;
+  margin: 0 0 10px;
+  color: #ccc;
+}
+
+.adm-confirm-warning {
+  font-size: 0.88rem;
+  color: #ffaa00;
+  margin: 8px 0;
+}
+
+.adm-confirm-list {
+  margin: 6px 0 14px 16px;
+  padding: 0;
+  font-size: 0.85rem;
+  color: #ccc;
+  list-style: disc;
+}
+
+.adm-confirm-list li { margin-bottom: 4px; }
+
+.adm-confirm-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.adm-confirm-btn {
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+
+.adm-confirm-cancel {
+  background: transparent;
+  border-color: rgba(255,255,255,0.3);
+  color: #ccc;
+}
+
+.adm-confirm-cancel:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.adm-confirm-ok {
+  background: rgba(200,0,0,0.7);
+  border-color: rgba(255,0,0,0.6);
+  color: #fff;
+}
+
+.adm-confirm-ok:hover {
+  background: rgba(200,0,0,0.9);
+}
+
 .adm-thumb-check {
   position: absolute;
   top: 4px;

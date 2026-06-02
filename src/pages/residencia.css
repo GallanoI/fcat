@@ -427,10 +427,15 @@
     overflow: hidden;
   }
 
+  .ascending-panel .left-col {
+    flex: 0 0 40%;
+  }
+
   .ascending-panel .right-col {
     flex: 0 0 60%;
     height: 100%;
     padding: 0 14px;
+    overflow-y: auto;
   }
 
   .ascending-panel .right-col p {

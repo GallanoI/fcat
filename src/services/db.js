@@ -78,6 +78,19 @@ export const getAdminApoderados = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   }).then((r) => r.json());
 
+export const deleteInscripcionDia = (token, inscripcionId, fecha) =>
+  fetch(`${API_URL}/api/admin/inscripcion-dia`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ inscripcionId, fecha }),
+  }).then((r) => r.json());
+
+export const deleteApoderado = (token, apoderadoId) =>
+  fetch(`${API_URL}/api/admin/apoderado/${apoderadoId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((r) => r.json());
+
 /** @returns {Promise<{success: boolean, items: Array}>} */
 export const uploadCarouselFiles = (token, carouselId, files) => {
   const formData = new FormData();

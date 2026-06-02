@@ -470,8 +470,8 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
       `SELECT COUNT(*) as cnt FROM Inscripcion WHERE taller_id = ? AND dias_asistencia LIKE '%' || ? || '%'`
     );
 
-    // Detección de duplicados fuzzy: 3+ de 5 campos coinciden en el mismo taller+día
-    // Campos: nombre niño, edad, nombre apoderado, teléfono, correo (case-insensitive, trimmed)
+    // Detección de duplicados fuzzy: nombre niño obligatorio + 3+ de 4 campos restantes
+    // Campos extra: edad, nombre apoderado, teléfono, correo (case-insensitive, trimmed)
     const checkDuplicate = db.prepare(`
       SELECT COUNT(*) AS cnt
       FROM Inscripcion i
@@ -480,11 +480,11 @@ app.post('/api/inscripcion', inscripcionLimiter, (req, res) => {
       WHERE i.taller_id = @tallerId
         AND i.dias_asistencia LIKE '%' || @fecha || '%'
         AND n.id <> @ninoId
+        AND LOWER(TRIM(n.nombre)) = LOWER(TRIM(@nombreNino))
         AND (
-          (LOWER(TRIM(n.nombre))   = LOWER(TRIM(@nombreNino)))  +
-          (CAST(n.edad AS TEXT)    = CAST(@edad AS TEXT))        +
-          (LOWER(TRIM(a.nombre))   = LOWER(TRIM(@nombreApo)))   +
-          (TRIM(a.telefono)        = TRIM(@telefono))            +
+          (CAST(n.edad AS TEXT)    = CAST(@edad AS TEXT))       +
+          (LOWER(TRIM(a.nombre))   = LOWER(TRIM(@nombreApo)))  +
+          (TRIM(a.telefono)        = TRIM(@telefono))           +
           (LOWER(TRIM(a.correo))   = LOWER(TRIM(@correo)))
         ) >= 3
     `);
@@ -621,7 +621,8 @@ app.get('/api/admin/carousel/:id/items', adminAuth, (req, res) => {
 app.get('/api/admin/db-info', adminAuth, (req, res) => {
   const talleres = db.prepare('SELECT * FROM Taller ORDER BY fecha1').all();
   const inscripciones = db.prepare(`
-    SELECT t.nombre_taller, n.nombre AS nino_nombre, n.edad, i.dias_asistencia,
+    SELECT i.id AS inscripcion_id, n.id AS nino_id, a.id AS apoderado_id,
+           t.nombre_taller, n.nombre AS nino_nombre, n.edad, i.dias_asistencia,
            a.nombre AS apoderado_nombre, a.telefono, a.correo
     FROM Inscripcion i
     JOIN Nino n ON n.id = i.nino_id
@@ -660,7 +661,8 @@ app.get('/api/admin/apoderados', adminAuth, (req, res) => {
     }
   }
 
-  const apoderados = Array.from(map.values()).map((a) => ({
+  const apoderados = Array.from(map.entries()).map(([id, a]) => ({
+    id,
     nombre:         a.nombre,
     rut:            a.rut,
     telefono:       a.telefono,
@@ -672,6 +674,46 @@ app.get('/api/admin/apoderados', adminAuth, (req, res) => {
   }));
 
   res.json({ apoderados });
+});
+
+app.delete('/api/admin/inscripcion-dia', adminAuth, (req, res) => {
+  const { inscripcionId, fecha } = req.body || {};
+  if (!inscripcionId || !fecha) return res.status(400).json({ error: 'Datos incompletos' });
+
+  const insc = db.prepare('SELECT * FROM Inscripcion WHERE id = ?').get(inscripcionId);
+  if (!insc) return res.status(404).json({ error: 'Inscripción no encontrada' });
+
+  const dias = insc.dias_asistencia.split(',').map((d) => d.trim()).filter((d) => d !== fecha.trim());
+
+  db.exec('BEGIN');
+  try {
+    if (dias.length === 0) {
+      db.prepare('DELETE FROM Inscripcion WHERE id = ?').run(inscripcionId);
+      const { cnt } = db.prepare('SELECT COUNT(*) AS cnt FROM Inscripcion WHERE nino_id = ?').get(insc.nino_id);
+      if (cnt === 0) {
+        db.prepare('DELETE FROM Nino WHERE id = ?').run(insc.nino_id);
+      }
+    } else {
+      db.prepare('UPDATE Inscripcion SET dias_asistencia = ? WHERE id = ?').run(dias.join(','), inscripcionId);
+    }
+    db.exec('COMMIT');
+  } catch (e) {
+    db.exec('ROLLBACK');
+    throw e;
+  }
+
+  res.json({ success: true });
+});
+
+app.delete('/api/admin/apoderado/:apoderadoId', adminAuth, (req, res) => {
+  const apoderadoId = parseIntParam(req.params.apoderadoId);
+  if (!apoderadoId) return res.status(400).json({ error: 'ID inválido' });
+
+  const apo = db.prepare('SELECT id FROM Apoderado WHERE id = ?').get(apoderadoId);
+  if (!apo) return res.status(404).json({ error: 'Apoderado no encontrado' });
+
+  db.prepare('DELETE FROM Apoderado WHERE id = ?').run(apoderadoId);
+  res.json({ success: true });
 });
 
 app.post('/api/admin/carousel/:id/upload', adminAuth, upload.array('files'), (req, res) => {
