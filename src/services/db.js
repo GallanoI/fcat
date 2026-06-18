@@ -78,6 +78,11 @@ export const getAdminApoderados = (token) =>
     headers: { Authorization: `Bearer ${token}` },
   }).then((r) => r.json());
 
+export const getAdminAlumnos = (token) =>
+  fetch(`${API_URL}/api/admin/alumnos`, {
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((r) => r.json());
+
 export const deleteInscripcionDia = (token, inscripcionId, fecha) =>
   fetch(`${API_URL}/api/admin/inscripcion-dia`, {
     method: 'DELETE',

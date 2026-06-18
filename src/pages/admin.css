@@ -266,6 +266,12 @@
   flex-shrink: 0;
 }
 
+.adm-db-tabs-right {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .adm-sortable-th {
   cursor: pointer;
   user-select: none;

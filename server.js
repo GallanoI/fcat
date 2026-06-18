@@ -676,6 +676,22 @@ app.get('/api/admin/apoderados', adminAuth, (req, res) => {
   res.json({ apoderados });
 });
 
+app.get('/api/admin/alumnos', adminAuth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT n.id AS nino_id, n.nombre, n.rut,
+           a.nombre AS apoderado_nombre,
+           COUNT(i.id) AS cantidad_talleres,
+           COALESCE(GROUP_CONCAT(t.nombre_taller, ';'), '') AS talleres_nombres
+    FROM Nino n
+    JOIN Apoderado a ON a.id = n.apoderado_id
+    LEFT JOIN Inscripcion i ON i.nino_id = n.id
+    LEFT JOIN Taller t ON t.id = i.taller_id
+    GROUP BY n.id
+    ORDER BY n.nombre
+  `).all();
+  res.json({ alumnos: rows });
+});
+
 app.delete('/api/admin/inscripcion-dia', adminAuth, (req, res) => {
   const { inscripcionId, fecha } = req.body || {};
   if (!inscripcionId || !fecha) return res.status(400).json({ error: 'Datos incompletos' });

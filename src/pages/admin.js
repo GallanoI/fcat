@@ -22,6 +22,7 @@ import {
   getAdminCarouselItems,
   getAdminDbInfo,
   getAdminApoderados,
+  getAdminAlumnos,
   uploadCarouselFiles,
   deleteCarouselItem,
   reorderCarouselItems,
@@ -108,6 +109,12 @@ function DBInfoPanel({ token }) {
   const [sortDir, setSortDir] = useState('asc');
   const [showApoderados, setShowApoderados] = useState(false);
   const [apoderados, setApoderados] = useState(null);
+  const [showAlumnos, setShowAlumnos] = useState(false);
+  const [alumnos, setAlumnos] = useState(null);
+  const [alumnosSortCol, setAlumnosSortCol] = useState(null);
+  const [alumnosSortDir, setAlumnosSortDir] = useState('asc');
+  const [apoSortCol, setApoSortCol] = useState(null);
+  const [apoSortDir, setApoSortDir] = useState('asc');
   const [confirmModal, setConfirmModal] = useState(null);
 
   useEffect(() => {
@@ -149,6 +156,48 @@ function DBInfoPanel({ token }) {
     });
   };
 
+  const handleSortAlumnos = (col) => {
+    if (alumnosSortCol === col) {
+      if (alumnosSortDir === 'asc') setAlumnosSortDir('desc');
+      else { setAlumnosSortCol(null); setAlumnosSortDir('asc'); }
+    } else { setAlumnosSortCol(col); setAlumnosSortDir('asc'); }
+  };
+  const getAlumnosSortIcon = (col) => alumnosSortCol !== col ? '↕' : alumnosSortDir === 'asc' ? '↑' : '↓';
+  const sortAlumnos = (rows) => {
+    if (!alumnosSortCol) return rows;
+    return [...rows].sort((a, b) => {
+      const va = a[alumnosSortCol]; const vb = b[alumnosSortCol];
+      if (alumnosSortCol === 'cantidad_talleres') {
+        return alumnosSortDir === 'asc' ? Number(va) - Number(vb) : Number(vb) - Number(va);
+      }
+      const sa = String(va ?? '').toLowerCase(); const sb = String(vb ?? '').toLowerCase();
+      if (sa < sb) return alumnosSortDir === 'asc' ? -1 : 1;
+      if (sa > sb) return alumnosSortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const handleSortApo = (col) => {
+    if (apoSortCol === col) {
+      if (apoSortDir === 'asc') setApoSortDir('desc');
+      else { setApoSortCol(null); setApoSortDir('asc'); }
+    } else { setApoSortCol(col); setApoSortDir('asc'); }
+  };
+  const getApoSortIcon = (col) => apoSortCol !== col ? '↕' : apoSortDir === 'asc' ? '↑' : '↓';
+  const sortApo = (rows) => {
+    if (!apoSortCol) return rows;
+    return [...rows].sort((a, b) => {
+      const va = a[apoSortCol]; const vb = b[apoSortCol];
+      if (apoSortCol === 'cantidad_ninos') {
+        return apoSortDir === 'asc' ? Number(va) - Number(vb) : Number(vb) - Number(va);
+      }
+      const sa = String(va ?? '').toLowerCase(); const sb = String(vb ?? '').toLowerCase();
+      if (sa < sb) return apoSortDir === 'asc' ? -1 : 1;
+      if (sa > sb) return apoSortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
   const formatFecha = (f) => {
     const d = new Date(String(f).trim().replace(' ', 'T'));
     if (isNaN(d)) return f;
@@ -157,8 +206,17 @@ function DBInfoPanel({ token }) {
 
   const handleShowApoderados = () => {
     setShowApoderados(true);
+    setShowAlumnos(false);
     if (!apoderados) {
       getAdminApoderados(token).then((d) => setApoderados(d.apoderados || []));
+    }
+  };
+
+  const handleShowAlumnos = () => {
+    setShowAlumnos(true);
+    setShowApoderados(false);
+    if (!alumnos) {
+      getAdminAlumnos(token).then((d) => setAlumnos(d.alumnos || []));
     }
   };
 
@@ -245,6 +303,9 @@ function DBInfoPanel({ token }) {
     if (apoderados !== null) {
       getAdminApoderados(token).then((d) => setApoderados(d.apoderados || []));
     }
+    if (alumnos !== null) {
+      getAdminAlumnos(token).then((d) => setAlumnos(d.alumnos || []));
+    }
   };
 
   if (!data) return <div className="adm-loading">Cargando...</div>;
@@ -261,23 +322,31 @@ function DBInfoPanel({ token }) {
           {talleres.map((t) => (
             <button
               key={t.id}
-              className={`adm-db-tab${!showApoderados && activeTab === t.id ? ' active' : ''}`}
-              onClick={() => { setActiveTab(t.id); setShowApoderados(false); }}
+              className={`adm-db-tab${!showApoderados && !showAlumnos && activeTab === t.id ? ' active' : ''}`}
+              onClick={() => { setActiveTab(t.id); setShowApoderados(false); setShowAlumnos(false); }}
             >
               {t.nombre_taller}
             </button>
           ))}
         </div>
-        <button
-          className={`adm-db-tab adm-db-tab-apoderado${showApoderados ? ' active' : ''}`}
-          onClick={handleShowApoderados}
-        >
-          Apoderado
-        </button>
+        <div className="adm-db-tabs-right">
+          <button
+            className={`adm-db-tab${showAlumnos ? ' active' : ''}`}
+            onClick={handleShowAlumnos}
+          >
+            Alumnos
+          </button>
+          <button
+            className={`adm-db-tab adm-db-tab-apoderado${showApoderados ? ' active' : ''}`}
+            onClick={handleShowApoderados}
+          >
+            Apoderado
+          </button>
+        </div>
       </div>
 
       {/* ── Inscripciones por taller ── */}
-      {!showApoderados && talleres.map((t) =>
+      {!showApoderados && !showAlumnos && talleres.map((t) =>
         activeTab !== t.id ? null : (
           <div key={t.id} className="adm-db-panel">
             <p className="adm-db-tallerista">Tallerista: {t.nombre_tallerista}</p>
@@ -346,19 +415,25 @@ function DBInfoPanel({ token }) {
                 <table className="adm-db-table">
                   <thead>
                     <tr>
-                      <th>Nombre completo</th>
-                      <th>RUT</th>
-                      <th>Teléfono</th>
-                      <th>Correo electrónico</th>
-                      <th>Dirección</th>
-                      <th>Cant. niños</th>
-                      <th>Nombre Niño/a</th>
-                      <th>RUT Niño/a</th>
+                      {[
+                        { col: 'nombre',         label: 'Nombre completo' },
+                        { col: 'rut',            label: 'RUT' },
+                        { col: 'telefono',       label: 'Teléfono' },
+                        { col: 'correo',         label: 'Correo electrónico' },
+                        { col: 'direccion',      label: 'Dirección' },
+                        { col: 'cantidad_ninos', label: 'Cant. niños' },
+                        { col: 'ninos_nombres',  label: 'Nombre Niño/a' },
+                        { col: 'ninos_ruts',     label: 'RUT Niño/a' },
+                      ].map(({ col, label }) => (
+                        <th key={col} className="adm-sortable-th" onClick={() => handleSortApo(col)}>
+                          {label} <span className="adm-sort-icon">{getApoSortIcon(col)}</span>
+                        </th>
+                      ))}
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {apoderados.map((a, idx) => {
+                    {sortApo(apoderados).map((a, idx) => {
                       const isOrphan = a.cantidad_ninos === 0;
                       return (
                         <tr key={idx} className={isOrphan ? 'adm-row-orphan' : ''}>
@@ -391,6 +466,46 @@ function DBInfoPanel({ token }) {
                 Exportar CSV
               </button>
             </>
+          )}
+        </div>
+      )}
+
+      {/* ── Alumnos ── */}
+      {showAlumnos && (
+        <div className="adm-db-panel">
+          {!alumnos ? (
+            <div className="adm-loading">Cargando alumnos...</div>
+          ) : (
+            <div className="adm-db-table-wrap">
+              <table className="adm-db-table">
+                <thead>
+                  <tr>
+                    {[
+                      { col: 'nombre',            label: 'Nombre' },
+                      { col: 'rut',               label: 'RUT' },
+                      { col: 'apoderado_nombre',  label: 'Apoderado' },
+                      { col: 'cantidad_talleres', label: 'Cant. talleres' },
+                      { col: 'talleres_nombres',  label: 'Talleres' },
+                    ].map(({ col, label }) => (
+                      <th key={col} className="adm-sortable-th" onClick={() => handleSortAlumnos(col)}>
+                        {label} <span className="adm-sort-icon">{getAlumnosSortIcon(col)}</span>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortAlumnos(alumnos).map((a, idx) => (
+                    <tr key={idx}>
+                      <td>{a.nombre}</td>
+                      <td>{a.rut}</td>
+                      <td>{a.apoderado_nombre}</td>
+                      <td>{a.cantidad_talleres}</td>
+                      <td>{a.talleres_nombres ? a.talleres_nombres.split(';').join(', ') : '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
